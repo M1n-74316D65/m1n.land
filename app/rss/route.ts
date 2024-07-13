@@ -18,8 +18,8 @@ export async function GET() {
           <link>${baseUrl}/blog/${post.slug}</link>
           <description>${post.metadata.summary || ''}</description>
           <pubDate>${new Date(
-            post.metadata.publishedAt
-          ).toUTCString()}</pubDate>
+          post.metadata.publishedAt
+        ).toUTCString()}</pubDate>
         </item>`
     )
     .join('\n')
@@ -27,9 +27,9 @@ export async function GET() {
   const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
   <rss version="2.0">
     <channel>
-        <title>My Portfolio</title>
+        <title>M1n coding blog</title>
         <link>${baseUrl}</link>
-        <description>This is my portfolio RSS feed</description>
+        <description>M1n coding blog RSS feed</description>
         ${itemsXml}
     </channel>
   </rss>`

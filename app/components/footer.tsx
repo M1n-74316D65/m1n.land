@@ -9,6 +9,7 @@ import {
   LockKeyhole,
   Terminal,
   Code,
+  LayoutTemplate
 } from "lucide-react";
 
 // function ArrowIcon() {
@@ -94,7 +95,7 @@ export default function Footer() {
             className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
             rel="noopener noreferrer"
             target="_blank"
-            href="mailto:m1n/public@omg.lol"
+            href="mailto:public@m1n.land"
           >
             <AtSign className="w-4 h-4 font-bold" />
             <p className="ml-2 h-7">email</p>
@@ -134,6 +135,19 @@ export default function Footer() {
           >
             <Code className="w-4 h-4 font-bold" />
             <p className="ml-2 h-7">source-code</p>
+          </Link>
+        </li>
+      </ul>
+      <ul className="font-sm flex flex-col space-x-0 space-y-2 text-neutral-600 md:flex-row md:space-x-4 md:space-y-0 dark:text-neutral-300">
+        <li>
+          <Link
+            className="flex items-center transition-all hover:text-neutral-800 dark:hover:text-neutral-100"
+            rel="noopener noreferrer"
+            target="_blank"
+            href="http://start.m1n.land"
+          >
+            <LayoutTemplate className="w-4 h-4 font-bold" />
+            <p className="ml-2 h-7">startpage</p>
           </Link>
         </li>
       </ul>

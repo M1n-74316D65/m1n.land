@@ -1,10 +1,37 @@
-// import { BlogPosts } from "app/components/posts";
-import Link from "next/link";
 import TypingAnimation from "app/components/ui/magicui/typing-animation";
 import BlurFade from "app/components/ui/magicui/blur-fade";
-import Footer from "./components/footer";
+import Footer from "app/components/footer";
+import LinkComponent from "app/components/LinkComponent";
+import React from "react";
 
-export default function Page() {
+const links = [
+  {
+    href: "https://www.rust-lang.org",
+    text: "Rust",
+  },
+  {
+    href: "https://zed.dev/",
+    text: "Zed",
+  },
+  {
+    href: "https://zellij.dev",
+    text: "Zellij",
+  },
+  {
+    href: "https://neovim.io",
+    text: "Neovim",
+  },
+  {
+    href: "https://nextjs.org",
+    text: "Next.js",
+  },
+  {
+    href: "https://go.dev",
+    text: "Go",
+  },
+];
+
+const Page: React.FC = () => {
   return (
     <section>
       <TypingAnimation
@@ -17,63 +44,21 @@ export default function Page() {
           {`I love coding, thinking about philosophy, and playing games.`}
           <br />
           {`Linux user. `}
-          <Link
-            className="hover:text-neutral-800 dark:hover:text-neutral-100 text-neutral-600 dark:text-neutral-300"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://www.rust-lang.org"
-          >
-            <span>Rust</span>
-          </Link>
+          <LinkComponent href={links[0].href} text={links[0].text} />
           {` as the most entertaining language.`}
           <br />
           {`Trying to escape from VS Code to `}
-          <Link
-            className="hover:text-neutral-800 dark:hover:text-neutral-100 text-neutral-600 dark:text-neutral-300"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://zed.dev/"
-          >
-            <span>Zed</span>
-          </Link>
+          <LinkComponent href={links[1].href} text={links[1].text} />
           {` and (`}
-          <Link
-            className="hover:text-neutral-800 dark:hover:text-neutral-100 text-neutral-600 dark:text-neutral-300"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://zellij.dev"
-          >
-            <span>Zellij</span>
-          </Link>
+          <LinkComponent href={links[2].href} text={links[2].text} />
           {`, `}
-          <Link
-            className="hover:text-neutral-800 dark:hover:text-neutral-100 text-neutral-600 dark:text-neutral-300"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://neovim.io"
-          >
-            <span>Neovim</span>
-          </Link>
+          <LinkComponent href={links[3].href} text={links[3].text} />
           {`).`}
           <br />
           {`Furthermore, learning `}
-          <Link
-            className="hover:text-neutral-800 dark:hover:text-neutral-100 text-neutral-600 dark:text-neutral-300"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://nextjs.org"
-          >
-            <span>Next.js</span>
-          </Link>
+          <LinkComponent href={links[4].href} text={links[4].text} />
           {` and trying to learn `}
-          <Link
-            className="hover:text-neutral-800 dark:hover:text-neutral-100 text-neutral-600 dark:text-neutral-300"
-            rel="noopener noreferrer"
-            target="_blank"
-            href="https://go.dev"
-          >
-            <span>Go</span>
-          </Link>
+          <LinkComponent href={links[5].href} text={links[5].text} />
           {` (seems to be efficient).`}
         </p>
         {/* <div className="my-8">
@@ -83,4 +68,6 @@ export default function Page() {
       </BlurFade>
     </section>
   );
-}
+};
+
+export default Page;

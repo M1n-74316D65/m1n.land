@@ -1,6 +1,6 @@
 import TypingAnimation from "app/components/ui/magicui/typing-animation";
 import BlurFade from "app/components/ui/magicui/blur-fade";
-import Footer from "app/components/footer";
+import Footer from "app/components/footer/footer";
 import LinkComponent from "app/components/LinkComponent";
 import React from "react";
 
@@ -61,10 +61,9 @@ const Page: React.FC = () => {
           <LinkComponent href={links[5].href} text={links[5].text} />
           {` (seems to be efficient).`}
         </p>
-        {/* <div className="my-8">
-        <BlogPosts />
-      </div> */}
-        <Footer />
+        <div className="pt-4">
+          <Footer />
+        </div>
       </BlurFade>
     </section>
   );

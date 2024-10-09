@@ -1,13 +1,15 @@
+import { FC, ReactNode, useMemo } from "react";
 import "./global.css";
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { Navbar } from "./components/nav";
+import Navbar from "app/components/nav";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { baseUrl } from "./sitemap";
 
-export const metadata: Metadata = {
+// Metadata configuration
+const siteMetadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
     default: "M1n",
@@ -35,22 +37,30 @@ export const metadata: Metadata = {
   },
 };
 
-const cx = (...classes) => classes.filter(Boolean).join(" ");
+export const metadata = siteMetadata;
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html
-      lang="en"
-      className={cx(
+// Utility function for class names
+const cx = (...classes: (string | boolean | undefined)[]): string =>
+  classes.filter(Boolean).join(" ");
+
+// RootLayout component
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+const RootLayout: FC<RootLayoutProps> = ({ children }) => {
+  const htmlClassName = useMemo(
+    () =>
+      cx(
         "text-black bg-white dark:text-white dark:bg-black",
         GeistSans.variable,
         GeistMono.variable,
-      )}
-    >
+      ),
+    [],
+  );
+
+  return (
+    <html lang="en" className={htmlClassName}>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
         <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
           <Navbar />
@@ -61,4 +71,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

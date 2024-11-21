@@ -1,6 +1,5 @@
 import {
   Github,
-  Gitlab,
   AtSign,
   Rss,
   CircleUserRound,
@@ -9,6 +8,7 @@ import {
   Terminal,
   Code,
   LayoutTemplate,
+  Wrench,
 } from "lucide-react";
 
 export const footerLinks = [
@@ -20,14 +20,14 @@ export const footerLinks = [
     },
     { href: "https://m1n.url.lol/pastol", icon: Terminal, label: "pastol" },
     {
+      href: "https://toolbox.m1n.land/",
+      icon: Wrench,
+      label: "toolbox",
+    },
+    {
       href: "https://m1n.url.lol/github-profile",
       icon: Github,
       label: "github",
-    },
-    {
-      href: "https://m1n.url.lol/gitlab-profile",
-      icon: Gitlab,
-      label: "gitlab",
     },
   ],
   [

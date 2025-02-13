@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "app/lib/utils";
 
@@ -91,6 +91,7 @@ const useMorphingText = (texts: string[]) => {
 interface MorphingTextProps {
   className?: string;
   texts: string[];
+  delay?: number;
 }
 
 const Texts: React.FC<Pick<MorphingTextProps, "texts">> = ({ texts }) => {
@@ -98,11 +99,11 @@ const Texts: React.FC<Pick<MorphingTextProps, "texts">> = ({ texts }) => {
   return (
     <>
       <span
-        className="absolute inset-x-0 top-0 m-auto inline-block w-full"
+        className="absolute inset-x-0 top-0 m-auto inline-block w-full opacity-0"
         ref={text1Ref}
       />
       <span
-        className="absolute inset-x-0 top-0 m-auto inline-block w-full"
+        className="absolute inset-x-0 top-0 m-auto inline-block w-full opacity-0"
         ref={text2Ref}
       />
     </>
@@ -133,14 +134,28 @@ const SvgFilters: React.FC = () => (
 export const MorphingText: React.FC<MorphingTextProps> = ({
   texts,
   className,
-}) => (
-  <div
-    className={cn(
-      "relative inline-flex h-8 text-2xl font-semibold tracking-tighter [filter:url(#threshold)_blur(0.5px)]", // balanced base blur
-      className,
-    )}
-  >
-    <Texts texts={texts} />
-    <SvgFilters />
-  </div>
-);
+  delay = 0,
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  return (
+    <div
+      className={cn(
+        "relative inline-flex h-8 text-2xl font-semibold tracking-tighter [filter:url(#threshold)_blur(0.5px)]",
+        className,
+        isVisible ? "opacity-100" : "opacity-0",
+        "transition-opacity duration-200"
+      )}
+    >
+      <Texts texts={texts} />
+      <SvgFilters />
+    </div>
+  );
+};

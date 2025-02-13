@@ -43,7 +43,7 @@ const Page: React.FC = () => {
     <section>
       <div className="mb-8 text-2xl font-semibold tracking-tighter flex items-center">
         <TypingAnimation duration={75} className="whitespace-nowrap">Hi, I'm&nbsp;</TypingAnimation>
-        <MorphingText texts={texts} className="min-w-[80px]" />
+        <MorphingText texts={texts} className="min-w-[80px]" delay={75} />
       </div>
       <BlurFade delay={1.75} inView>
         <p className="mb-4">

@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { cn } from "app/lib/utils";
 
-const morphTime = 1.5;
-const cooldownTime = 0.5;
+const morphTime = 1.85; // slightly longer for smoother transition
+const cooldownTime = 0.85; // slightly longer cooldown
 
 const useMorphingText = (texts: string[]) => {
   const textIndexRef = useRef(0);
@@ -21,12 +21,12 @@ const useMorphingText = (texts: string[]) => {
       const [current1, current2] = [text1Ref.current, text2Ref.current];
       if (!current1 || !current2) return;
 
-      current2.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-      current2.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+      current2.style.filter = `blur(${Math.min(7 / fraction - 7, 85)}px)`; // balanced blur values
+      current2.style.opacity = `${Math.pow(fraction, 0.55) * 100}%`; // smoother fade
 
       const invertedFraction = 1 - fraction;
-      current1.style.filter = `blur(${Math.min(8 / invertedFraction - 8, 100)}px)`;
-      current1.style.opacity = `${Math.pow(invertedFraction, 0.4) * 100}%`;
+      current1.style.filter = `blur(${Math.min(7 / invertedFraction - 7, 85)}px)`; // balanced blur values
+      current1.style.opacity = `${Math.pow(invertedFraction, 0.55) * 100}%`; // smoother fade
 
       current1.textContent = texts[textIndexRef.current % texts.length];
       current2.textContent = texts[(textIndexRef.current + 1) % texts.length];
@@ -123,7 +123,7 @@ const SvgFilters: React.FC = () => (
           values="1 0 0 0 0
                   0 1 0 0 0
                   0 0 1 0 0
-                  0 0 0 255 -140"
+                  0 0 0 255 -120"
         />
       </filter>
     </defs>
@@ -136,7 +136,7 @@ export const MorphingText: React.FC<MorphingTextProps> = ({
 }) => (
   <div
     className={cn(
-      "relative inline-flex h-8 text-2xl font-semibold tracking-tighter [filter:url(#threshold)_blur(0.6px)]",
+      "relative inline-flex h-8 text-2xl font-semibold tracking-tighter [filter:url(#threshold)_blur(0.5px)]", // balanced base blur
       className,
     )}
   >

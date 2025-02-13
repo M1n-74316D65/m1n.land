@@ -1,74 +1,90 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import { cn } from "app/lib/utils";
+import { motion, MotionProps } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
-interface TypingAnimationProps {
-  text: string;
-  duration?: number;
+interface TypingAnimationProps extends MotionProps {
+  children: string;
   className?: string;
+  duration?: number;
+  delay?: number;
+  as?: React.ElementType;
+  startOnView?: boolean;
 }
 
-const TypingAnimation: React.FC<TypingAnimationProps> = ({
-  text,
-  duration = 200,
-  className = "",
-}) => {
+export function TypingAnimation({
+  children,
+  className,
+  duration = 100,
+  delay = 0,
+  as: Component = "div",
+  startOnView = false,
+  ...props
+}: TypingAnimationProps) {
+  const MotionComponent = motion.create(Component, {
+    forwardMotionProps: true,
+  });
+
   const [displayedText, setDisplayedText] = useState<string>("");
-  const indexRef = useRef<number>(0);
-  const frameRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number | null>(null);
-
-  const typingEffect = useCallback(
-    (timestamp: number) => {
-      if (!startTimeRef.current) {
-        startTimeRef.current = timestamp;
-      }
-
-      const elapsed = timestamp - startTimeRef.current;
-
-      if (elapsed >= duration) {
-        if (indexRef.current < text.length) {
-          const nextChar = text[indexRef.current];
-          if (nextChar !== undefined) {
-            setDisplayedText((prev) => prev + nextChar);
-            indexRef.current += 1;
-            startTimeRef.current = timestamp;
-          } else {
-            console.error("Next character is undefined");
-          }
-        } else {
-          if (frameRef.current) {
-            cancelAnimationFrame(frameRef.current);
-          }
-          return;
-        }
-      }
-
-      frameRef.current = requestAnimationFrame(typingEffect);
-    },
-    [text, duration],
-  );
+  const [started, setStarted] = useState(false);
+  const elementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    // Reset the state and refs when text or duration changes
-    setDisplayedText("");
-    indexRef.current = 0;
-    startTimeRef.current = null;
+    if (!startOnView) {
+      const startTimeout = setTimeout(() => {
+        setStarted(true);
+      }, delay);
+      return () => clearTimeout(startTimeout);
+    }
 
-    frameRef.current = requestAnimationFrame(typingEffect);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            setStarted(true);
+          }, delay);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [delay, startOnView]);
+
+  useEffect(() => {
+    if (!started) return;
+
+    let i = 0;
+    const typingEffect = setInterval(() => {
+      if (i < children.length) {
+        setDisplayedText(children.substring(0, i + 1));
+        i++;
+      } else {
+        clearInterval(typingEffect);
+      }
+    }, duration);
 
     return () => {
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
-      }
+      clearInterval(typingEffect);
     };
-  }, [text, duration, typingEffect]);
+  }, [children, duration, started]);
 
   return (
-    <h1 className={`mb-8 text-2xl font-semibold tracking-tighter ${className}`}>
+    <MotionComponent
+      ref={elementRef}
+      className={cn(
+        "text-2xl font-semibold tracking-tighter",
+        className,
+      )}
+      {...props}
+    >
       {displayedText}
-    </h1>
+    </MotionComponent>
   );
-};
-
-export default TypingAnimation;
+}

@@ -1,4 +1,6 @@
-import TypingAnimation from "app/components/ui/magicui/typing-animation";
+import { TypingAnimation } from "app/components/ui/magicui/typing-animation";
+import { MorphingText } from "app/components/ui/magicui/morphing-text";
+
 import BlurFade from "app/components/ui/magicui/blur-fade";
 import Footer from "app/components/footer/footer";
 import LinkComponent from "app/components/LinkComponent";
@@ -31,14 +33,18 @@ const links = [
   },
 ];
 
+const texts = [
+  "David",
+  "M1n",
+];
+
 const Page: React.FC = () => {
   return (
     <section>
-      <TypingAnimation
-        text="Hi, I'm David aka M1n."
-        className="mb-8 text-2xl font-semibold tracking-tighter"
-        duration={75}
-      />
+      <div className="mb-8 text-2xl font-semibold tracking-tighter flex items-center">
+        <TypingAnimation duration={75} className="whitespace-nowrap">Hi, I'm&nbsp;</TypingAnimation>
+        <MorphingText texts={texts} className="min-w-[80px]" />
+      </div>
       <BlurFade delay={1.75} inView>
         <p className="mb-4">
           {`I love coding, thinking about philosophy, and playing games.`}

@@ -1,0 +1,17 @@
+image: alpine/edge
+
+secrets:
+  - f9b0470f-3ea4-4b49-aeb9-99e9f48d75e5
+
+tasks:
+  - configure-ssh: |
+      mkdir -p ~/.ssh
+      # echo "$f9b0470f-3ea4-4b49-aeb9-99e9f48d75e5" > ~/.ssh/id_ed25519
+      # chmod 600 ~/.ssh/id_ed25519
+      ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+  - mirror-to-github: |
+      cd m1n.land
+      git remote add github git@github.com:M1n-74316D65/m1n.land.git || true
+      git push --mirror github
+

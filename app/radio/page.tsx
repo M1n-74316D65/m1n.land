@@ -1,176 +1,194 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { Play, Pause, Volume2, VolumeX, Radio } from "lucide-react"
 import { Button } from "app/components/ui/button"
-import { Card, CardContent } from "app/components/ui/card"
 import { Slider } from "app/components/ui/slider"
 
-export default function Component() {
+export default function RadioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [volume, setVolume] = useState([70])
+  const [volume, setVolume] = useState(0.7)
   const [isMuted, setIsMuted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
 
-  // Example radio stream URL - replace with your actual radio stream
   const radioUrl = "https://radio.m1n.land/"
-  const stationName = "Your Radio Station"
-  const currentShow = "Now Playing: Your Favorite Music"
+  const stationName = "M1n Radio Station"
+  const currentShow = "Now Playing: Something"
 
+  // Efecto para manejar eventos audio
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
 
-    const handleLoadStart = () => setIsLoading(true)
-    const handleCanPlay = () => setIsLoading(false)
-    const handleError = () => {
+    const onLoadStart = () => {
+      setIsLoading(true)
+      setError(null)
+    }
+    const onCanPlay = () => setIsLoading(false)
+    const onError = () => {
       setIsLoading(false)
       setIsPlaying(false)
+      setError("Error cargando la transmisión. Intente nuevamente.")
     }
 
-    audio.addEventListener("loadstart", handleLoadStart)
-    audio.addEventListener("canplay", handleCanPlay)
-    audio.addEventListener("error", handleError)
+    audio.addEventListener("loadstart", onLoadStart)
+    audio.addEventListener("canplay", onCanPlay)
+    audio.addEventListener("error", onError)
 
     return () => {
-      audio.removeEventListener("loadstart", handleLoadStart)
-      audio.removeEventListener("canplay", handleCanPlay)
-      audio.removeEventListener("error", handleError)
+      audio.removeEventListener("loadstart", onLoadStart)
+      audio.removeEventListener("canplay", onCanPlay)
+      audio.removeEventListener("error", onError)
     }
   }, [])
 
-  const togglePlay = async () => {
+  // Actualizar volumen en audio y estado muted
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.volume = isMuted ? 0 : volume
+  }, [volume, isMuted])
+
+  // Función para reproducir / pausar
+  const togglePlay = useCallback(async () => {
     const audio = audioRef.current
     if (!audio) return
 
-    try {
-      if (isPlaying) {
-        audio.pause()
-        setIsPlaying(false)
-      } else {
+    if (isPlaying) {
+      audio.pause()
+      setIsPlaying(false)
+    } else {
+      try {
         setIsLoading(true)
         await audio.play()
         setIsPlaying(true)
+        setError(null)
+      } catch (e) {
+        setError("No se pudo iniciar la reproducción.")
+        console.error("Audio play error:", e)
+        setIsPlaying(false)
+      } finally {
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.error("Error playing audio:", error)
-      setIsPlaying(false)
-      setIsLoading(false)
     }
-  }
+  }, [isPlaying])
 
-  const handleVolumeChange = (newVolume: number[]) => {
-    const audio = audioRef.current
-    if (!audio) return
-
-    const volumeValue = newVolume[0] / 100
-    audio.volume = volumeValue
+  // Cambiar volumen desde slider
+  const onVolumeChange = useCallback((value: number[]) => {
+    const newVolume = value[0] / 100
     setVolume(newVolume)
-
-    if (volumeValue === 0) {
+    if (newVolume === 0) {
       setIsMuted(true)
     } else if (isMuted) {
       setIsMuted(false)
     }
-  }
+  }, [isMuted])
 
-  const toggleMute = () => {
-    const audio = audioRef.current
-    if (!audio) return
-
+  // Botón mute/unmute
+  const toggleMute = useCallback(() => {
     if (isMuted) {
-      audio.volume = volume[0] / 100
       setIsMuted(false)
+      if (volume === 0) setVolume(0.7) // fallback volumen si estaba a 0
     } else {
-      audio.volume = 0
       setIsMuted(true)
     }
-  }
+  }, [isMuted, volume])
 
   return (
-    <section>
-      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">
+    <section aria-label="Reproductor de radio online">
+      {/* El título ahora está fuera del contenedor centrado */}
+      <h1 className="text-2xl font-semibold mb-8 tracking-tight">
         My Radio
       </h1>
-      <Card className="w-full max-w-md mx-auto rounded-2xl shadow-lg border border-border bg-background/80 backdrop-blur">
-        <CardContent className="p-8">
-          <audio ref={audioRef} src={radioUrl} preload="none" />
 
-          {/* Station Info */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <Radio className="h-5 w-5 text-red-500" />
-              <h2 className="text-lg font-semibold">{stationName}</h2>
-            </div>
-            <p className="text-sm text-muted-foreground">{currentShow}</p>
+      {/* Este div centrará únicamente el reproductor */}
+      <div className="w-full max-w-md mx-auto">
+        <audio ref={audioRef} src={radioUrl} preload="none" />
+
+        {/* Información estación */}
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-2 mb-1 justify-center">
+            <Radio className="h-5 w-5 text-red-600" aria-hidden />
+            <h2 className="text-lg font-semibold">{stationName}</h2>
           </div>
+          <p className="text-sm text-muted-foreground">{currentShow}</p>
+        </div>
 
-          {/* Play/Pause Button */}
-          <div className="flex justify-center mb-8">
-            <Button
-              onClick={togglePlay}
-              size="lg"
-              className="h-16 w-16 rounded-full bg-gradient-to-tr shadow-lg hover:scale-105 transition-transform duration-150 focus:ring-4 focus:ring-red-200"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
-              ) : isPlaying ? (
-                <Pause className="h-6 w-6" />
-              ) : (
-                <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
-              )}
-            </Button>
-          </div>
+        {/* Botón reproducir/pausar */}
+        <div className="flex justify-center mb-6">
+          <Button
+            onClick={togglePlay}
+            size="lg"
+            className="h-16 w-16 rounded-full bg-gradient-to-tr from-red-500 to-red-700 shadow-lg hover:scale-105 transition-transform duration-150 focus:ring-4 focus:ring-red-300"
+            disabled={isLoading}
+            aria-label={isPlaying ? "Pausar radio" : "Reproducir radio"}
+          >
+            {isLoading ? (
+              <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
+            ) : isPlaying ? (
+              <Pause className="h-6 w-6" />
+            ) : (
+              <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+            )}
+          </Button>
+        </div>
 
-          {/* Volume Control */}
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleMute}
-              className="p-2 rounded-full hover:bg-accent focus:ring-2 focus:ring-accent"
-              aria-label={isMuted ? "Unmute" : "Mute"}
-            >
-              {isMuted || volume[0] === 0 ? (
-                <VolumeX className="h-5 w-5 text-muted-foreground" />
-              ) : (
-                <Volume2 className="h-5 w-5 text-muted-foreground" />
-              )}
-            </Button>
-            <div className="flex-1 px-2">
-              <Slider
-                value={isMuted ? [0] : volume}
-                onValueChange={handleVolumeChange}
-                max={100}
-                step={1}
-                className="w-full"
-                thumbClassName="bg-red-500 border-2 border-white shadow focus:ring-2 focus:ring-red-300"
-                trackClassName="bg-muted-foreground/20"
-                rangeClassName="bg-red-500"
-              />
-            </div>
-            <span className="text-xs text-muted-foreground w-8 text-right tabular-nums">
-              {isMuted ? 0 : volume[0]}
-            </span>
-          </div>
-
-          {/* Status Indicator */}
-          <div className="flex items-center justify-center gap-2 mt-6">
-            <div
-              className={`h-2.5 w-2.5 rounded-full ${
-                isPlaying
-                  ? "bg-red-500 animate-pulse shadow"
-                  : "bg-gray-300"
-              }`}
+        {/* Control de volumen */}
+        <div className="flex items-center gap-4" role="group" aria-label="Control de volumen">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleMute}
+            className="p-2 rounded-full hover:bg-accent focus:ring-2 focus:ring-accent"
+            aria-pressed={!isMuted}
+            aria-label={isMuted ? "Activar sonido" : "Silenciar"}
+          >
+            {isMuted || volume === 0 ? (
+              <VolumeX className="h-5 w-5 text-muted-foreground" />
+            ) : (
+              <Volume2 className="h-5 w-5 text-muted-foreground" />
+            )}
+          </Button>
+          <div className="flex-1 px-2">
+            <Slider
+              value={isMuted ? [0] : [Math.round(volume * 100)]}
+              onValueChange={onVolumeChange}
+              max={100}
+              step={1}
+              className="w-full"
+              thumbClassName="bg-red-500 border-2 border-white shadow focus:ring-2 focus:ring-red-300"
+              trackClassName="bg-muted-foreground/20"
+              rangeClassName="bg-red-500"
+              aria-label="Volumen"
             />
-            <span className="text-xs text-muted-foreground font-medium">
-              {isLoading ? "Loading..." : isPlaying ? "Live" : "Offline"}
-            </span>
           </div>
-        </CardContent>
-      </Card>
+          <span className="text-xs text-muted-foreground w-8 text-right tabular-nums" aria-live="polite" aria-atomic="true">
+            {isMuted ? 0 : Math.round(volume * 100)}
+          </span>
+        </div>
+
+        {/* Indicador de estado */}
+        <div className="flex items-center justify-center gap-2 mt-6" aria-live="polite">
+          <div
+            className={`h-2.5 w-2.5 rounded-full ${isPlaying ? "bg-red-600 animate-pulse shadow-lg" : "bg-gray-300"
+              }`}
+            aria-hidden
+          />
+          <span className="text-xs text-muted-foreground font-medium">
+            {isLoading ? "Cargando..." : isPlaying ? "En vivo" : "Detenido"}
+          </span>
+        </div>
+
+        {/* Mensaje de error */}
+        {error && (
+          <p role="alert" className="mt-4 text-center text-sm text-red-600 font-semibold">
+            {error}
+          </p>
+        )}
+      </div>
     </section>
   )
 }
+

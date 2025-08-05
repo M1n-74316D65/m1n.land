@@ -55,7 +55,7 @@ export default function RadioPlayer() {
         `${radioUrl}api/nowplaying`,
       ];
 
-      let trackInfo = null;
+      let trackInfo: { title: string; artist: string } | null = null;
 
       // Try API endpoints with shorter timeout per request
       for (const endpoint of metadataEndpoints) {
@@ -127,7 +127,7 @@ export default function RadioPlayer() {
   }, [radioUrl, stationName]);
 
   // Parse JSON metadata from various sources
-  const parseJSONMetadata = (data: any) => {
+  const parseJSONMetadata = (data: any): { title: string; artist: string } | null => {
     try {
       // MPD status format
       if (data.Title && data.Artist) {
@@ -173,7 +173,7 @@ export default function RadioPlayer() {
   };
 
   // Parse text metadata (MPD output, plain text, etc.)
-  const parseTextMetadata = (data: string, endpoint: string) => {
+  const parseTextMetadata = (data: string, endpoint: string): { title: string; artist: string } | null => {
     try {
       if (!data || typeof data !== 'string') return null;
       
@@ -212,7 +212,7 @@ export default function RadioPlayer() {
   };
 
   // Parse "Artist - Title" or "Title - Artist" format
-  const parseTitleArtist = (fullTitle: string) => {
+  const parseTitleArtist = (fullTitle: string): { title: string; artist: string } | null => {
     if (!fullTitle || fullTitle === '') return null;
     
     const separators = [' - ', ' – ', ' — ', ': ', ' | '];

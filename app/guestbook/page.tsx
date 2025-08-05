@@ -15,7 +15,7 @@ export default function Page() {
         My Guestbook
       </h1>
 
-      <div className="guestbook-section mt-8">
+      <div className="space-y-6">
         <Script
           src="https://guestbooks.meadow.cafe/resources/js/embed_script/590/script.js"
           strategy="afterInteractive"
@@ -26,6 +26,7 @@ export default function Page() {
             id="guestbooks___guestbook-form"
             action="https://guestbooks.meadow.cafe/guestbook/590/submit"
             method="post"
+            className="space-y-4"
           >
             <div className="guestbooks___input-container">
               <Input
@@ -34,8 +35,8 @@ export default function Page() {
                 id="name"
                 name="name"
                 required
+                className="w-full"
               />
-              <br />
             </div>
             <div className="guestbooks___input-container">
               <Input
@@ -43,37 +44,45 @@ export default function Page() {
                 type="url"
                 id="website"
                 name="website"
+                className="w-full"
               />
             </div>
             <div id="guestbooks___challenge-answer-container"></div>
-            <br />
             <div className="guestbooks___input-container">
               <Textarea
                 placeholder="Message (plain text only)..."
                 id="text"
                 name="text"
-                style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical' }}
                 required
+                className="w-full min-h-[100px] resize-vertical"
               />
             </div>
-            <br />
-            <Button type='submit' variant="outline">Submit</Button>
+            <Button type='submit' variant="outline" className="w-full sm:w-auto">
+              Submit
+            </Button>
             <div id="guestbooks___error-message"></div>
           </form>
         </div>
 
-        <div id="guestbooks___guestbook-made-with" style={{ textAlign: 'right' }}>
-          <small>
+        <div id="guestbooks___guestbook-made-with" className="text-right">
+          <small className="text-muted-foreground">
             Made with{' '}
-            <Link target="_blank" href="https://guestbooks.meadow.cafe">
+            <Link 
+              target="_blank" 
+              href="https://guestbooks.meadow.cafe"
+              className="hover:underline"
+            >
               Guestbooks
             </Link>
           </small>
         </div>
 
-        <hr style={{ margin: '1em 0' }} />
-        <h3 id="guestbooks___guestbook-messages-header">Messages</h3>
-        <div id="guestbooks___guestbook-messages-container"></div>
+        <div className="border-t pt-6">
+          <h3 id="guestbooks___guestbook-messages-header" className="font-semibold text-lg mb-4 tracking-tight">
+            Messages
+          </h3>
+          <div id="guestbooks___guestbook-messages-container"></div>
+        </div>
       </div>
     </section>
   );

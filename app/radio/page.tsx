@@ -4,6 +4,10 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Play, Pause, Volume2, VolumeX, Radio, Music } from "lucide-react";
 import { Button } from "app/components/ui/button";
 import { Slider } from "app/components/ui/slider";
+import { ShimmerButton } from "app/components/ui/magicui/shimmer-button";
+import { PulsatingButton } from "app/components/ui/magicui/pulsating-button";
+import { BorderBeam } from "app/components/ui/magicui/border-beam";
+import BlurFade from "app/components/ui/magicui/blur-fade";
 
 export default function RadioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -385,7 +389,9 @@ export default function RadioPlayer() {
       <h1 className="text-2xl font-semibold mb-8 tracking-tight">My Radio</h1>
 
       {/* Este div centrará únicamente el reproductor */}
-      <div className="w-full max-w-md mx-auto">
+      <BlurFade delay={0.25} inView>
+        <div className="relative w-full max-w-md mx-auto p-6 rounded-2xl border border-border/20 bg-background/50 backdrop-blur-sm">
+          <BorderBeam size={250} duration={12} delay={9} />
         <audio ref={audioRef} src={radioUrl} preload="none" />
 
         {/* Información estación */}
@@ -417,12 +423,14 @@ export default function RadioPlayer() {
 
         {/* Botón reproducir/pausar */}
         <div className="flex justify-center mb-6">
-          <Button
+          <ShimmerButton
             onClick={togglePlay}
-            size="lg"
             className="h-16 w-16 rounded-full bg-gradient-to-tr from-red-500 to-red-700 shadow-lg hover:scale-105 transition-transform duration-150 focus:ring-4 focus:ring-red-300"
             disabled={isLoading}
             aria-label={isPlaying ? "Pausar radio" : "Reproducir radio"}
+            shimmerColor="#ffffff40"
+            shimmerDuration="2s"
+            background="linear-gradient(135deg, #ef4444, #dc2626)"
           >
             {isLoading ? (
               <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
@@ -431,7 +439,7 @@ export default function RadioPlayer() {
             ) : (
               <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
             )}
-          </Button>
+          </ShimmerButton>
         </div>
 
         {/* Control de volumen */}
@@ -475,18 +483,26 @@ export default function RadioPlayer() {
 
         {/* Indicador de estado */}
         <div
-          className="flex items-center justify-center gap-2 mt-6"
+          className="flex items-center justify-center gap-3 mt-6"
           aria-live="polite"
         >
-          <div
-            className={`h-2.5 w-2.5 rounded-full ${
-              isPlaying ? "bg-red-600 animate-pulse shadow-lg" : "bg-gray-300"
-            }`}
-            aria-hidden
-          />
-          <span className="text-xs text-muted-foreground font-medium">
-            {isLoading ? "Cargando..." : isPlaying ? "En vivo" : "Detenido"}
-          </span>
+          {isPlaying ? (
+            <PulsatingButton
+              className="h-8 px-4 py-1 text-xs font-medium bg-red-600 text-white border-0"
+              pulseColor="#dc2626"
+              duration="2s"
+              disabled
+            >
+              En vivo
+            </PulsatingButton>
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="h-2.5 w-2.5 rounded-full bg-gray-400" aria-hidden />
+              <span className="text-xs text-muted-foreground font-medium">
+                {isLoading ? "Cargando..." : "Detenido"}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Mensaje de error */}
@@ -498,7 +514,8 @@ export default function RadioPlayer() {
             {error}
           </p>
         )}
-      </div>
+        </div>
+      </BlurFade>
     </section>
   );
 }

@@ -24,7 +24,7 @@
     "geist": "^1.4.2",
     "install": "^0.13.0",
     "lucide-react": "^0.514.0",
-    "motion": "^12.17.0",
+    "motion": "^12.23.12",
     "next": "^15.3.3",
     "next-mdx-remote": "5.0.0",
     "postcss": "^8.5.5",

@@ -14,7 +14,9 @@ const features = [
       "An all-in-one dashboard for efficiently managing sales, invoices, and reports.",
     href: "https://m1n.url.lol/miraviewer",
     cta: "Visit Miraviewer",
-    background: <img className="absolute -right-20 -top-20 opacity-60" />,
+    background: (
+      <div className="absolute inset-0 bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800" />
+    ),
     className: "lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2",
   },
   {
@@ -23,7 +25,9 @@ const features = [
     description: "Paste.lol Unofficial Command Line Interface.",
     href: "https://m1n.url.lol/pastol-repo",
     cta: "Visit repo",
-    background: <img className="absolute -right-20 -top-20 opacity-60" />,
+    background: (
+      <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700" />
+    ),
     className: "lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2",
   },
   {
@@ -32,7 +36,9 @@ const features = [
     description: "A command-line dotfile manager.",
     href: "https://m1n.url.lol/rusted-yadm",
     cta: "Visit repo",
-    background: <img className="absolute -right-20 -top-20 opacity-60" />,
+    background: (
+      <div className="absolute inset-0 bg-gradient-to-bl from-neutral-100 to-neutral-50 dark:from-neutral-700 dark:to-neutral-900" />
+    ),
     className: "lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3",
   },
   {
@@ -42,7 +48,9 @@ const features = [
       "Access all your passwords anytime with one master password, no syncing needed.",
     href: "https://m1n.url.lol/rustlesspass",
     cta: "Visit RustedLessPass",
-    background: <img className="absolute -right-20 -top-20 opacity-60" />,
+    background: (
+      <div className="absolute inset-0 bg-gradient-to-tl from-neutral-200 to-neutral-50 dark:from-neutral-800 dark:to-neutral-900" />
+    ),
     className: "lg:col-start-2 lg:col-end-4 lg:row-start-2 lg:row-end-3",
   },
 ];

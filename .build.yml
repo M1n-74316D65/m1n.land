@@ -19,25 +19,14 @@ tasks:
       git remote add github git@github.com:M1n-74316D65/m1n.land.git || true
       git push --mirror github
 
-  - setup: |
+  - deploy: |
       cd m1n.land
       curl -fsSL https://bun.sh/install | bash
       export BUN_INSTALL="$HOME/.bun"
       export PATH="$BUN_INSTALL/bin:$PATH"
-
-
-  - build: |
-      cd m1n.land
-      export BUN_INSTALL="$HOME/.bun"
-      export PATH="$BUN_INSTALL/bin:$PATH"
-      ~/.bun/bin/bun build
-
-  - deploy: |
-      cd m1n.land
-      export BUN_INSTALL="$HOME/.bun"
-      export PATH="$BUN_INSTALL/bin:$PATH"
+      bun build
       # Install Vercel CLI
-      ~/.bun/bin/bun install -g vercel
+      bun install -g vercel
       
       # Deploy to Vercel using the provided token
       VERCEL_TOKEN="9842a2f8-3365-4326-a3c0-9f155df7ae10" vercel --prod --yes --token "$VERCEL_TOKEN"

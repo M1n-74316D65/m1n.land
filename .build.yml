@@ -6,8 +6,6 @@ packages:
 secrets:
   - f9b0470f-3ea4-4b49-aeb9-99e9f48d75e5
   - 9842a2f8-3365-4326-a3c0-9f155df7ae10
-environment:
-  VERCEL_TOKEN= cat ~/.VERCEL_TOKEN
 
 tasks:
   - configure-ssh: |
@@ -23,6 +21,7 @@ tasks:
 
   - deploy: |
       cd m1n.land
+      export VERCEL_TOKEN=$(cat ~/.VERCEL_TOKEN)
       curl -fsSL https://bun.sh/install | bash
       export BUN_INSTALL="$HOME/.bun"
       export PATH="$BUN_INSTALL/bin:$PATH"

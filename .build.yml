@@ -6,6 +6,8 @@ packages:
 secrets:
   - f9b0470f-3ea4-4b49-aeb9-99e9f48d75e5
   - 9842a2f8-3365-4326-a3c0-9f155df7ae10
+environment:
+  VERCEL_TOKEN: 9842a2f8-3365-4326-a3c0-9f155df7ae10
 
 tasks:
   - configure-ssh: |
@@ -30,5 +32,5 @@ tasks:
       bun install -g vercel
       
       # Deploy to Vercel using the provided token
-      vercel --prod --yes --token $9842a2f8-3365-4326-a3c0-9f155df7ae10
+      vercel --prod --yes --token $VERCEL_TOKEN
 

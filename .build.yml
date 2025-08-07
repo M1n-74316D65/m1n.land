@@ -24,7 +24,7 @@ tasks:
       curl -fsSL https://bun.sh/install | bash
       export BUN_INSTALL="$HOME/.bun"
       export PATH="$BUN_INSTALL/bin:$PATH"
-      bun build
+      bun run build
       # Install Vercel CLI
       bun install -g vercel
       

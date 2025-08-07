@@ -22,19 +22,22 @@ tasks:
   - setup: |
       cd m1n.land
       curl -fsSL https://bun.sh/install | bash
-      bun install
-      export BUN_INSTALL="$HOME/.bun" 
-      export PATH="$BUN_INSTALL/bin:$PATH" 
+      export BUN_INSTALL="$HOME/.bun"
+      export PATH="$BUN_INSTALL/bin:$PATH"
 
 
   - build: |
       cd m1n.land
-      npm run build
+      export BUN_INSTALL="$HOME/.bun"
+      export PATH="$BUN_INSTALL/bin:$PATH"
+      ~/.bun/bin/bun build
 
   - deploy: |
       cd m1n.land
+      export BUN_INSTALL="$HOME/.bun"
+      export PATH="$BUN_INSTALL/bin:$PATH"
       # Install Vercel CLI
-      bun install -g vercel
+      ~/.bun/bin/bun install -g vercel
       
       # Deploy to Vercel using the provided token
       VERCEL_TOKEN="9842a2f8-3365-4326-a3c0-9f155df7ae10" vercel --prod --yes --token "$VERCEL_TOKEN"

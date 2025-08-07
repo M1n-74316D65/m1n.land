@@ -30,5 +30,5 @@ tasks:
       bun install -g vercel
       
       # Deploy to Vercel using the provided token
-      vercel --prod --yes --token "9842a2f8-3365-4326-a3c0-9f155df7ae10"
+      vercel --prod --yes --token 9842a2f8-3365-4326-a3c0-9f155df7ae10
 

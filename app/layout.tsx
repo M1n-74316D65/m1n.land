@@ -5,7 +5,6 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navbar from "app/components/nav";
 import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { baseUrl } from "./sitemap";
 
 // Metadata configuration
@@ -66,7 +65,6 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
           <Navbar />
           {children}
           <Analytics />
-          <SpeedInsights />
         </main>
       </body>
     </html>

@@ -14,18 +14,18 @@ import {
 export const footerLinks = [
   [
     {
-      href: "https://m1n.url.lol/rustlesspass",
+      href: "https://links.m1n.land/rustlesspass",
       icon: LockKeyhole,
       label: "rustedlesspass",
     },
-    { href: "https://m1n.url.lol/pastol", icon: Terminal, label: "pastol" },
+    { href: "https://links.m1n.land/pastol", icon: Terminal, label: "pastol" },
     {
       href: "https://git.sr.ht/~m1n/",
       icon: Circle,
       label: "sourcehut",
     },
     {
-      href: "https://m1n.url.lol/github-profile",
+      href: "https://links.m1n.land/github-profile",
       icon: Github,
       label: "github",
     },
@@ -38,7 +38,7 @@ export const footerLinks = [
     },
     { href: "mailto:public@m1n.land", icon: AtSign, label: "email" },
     {
-      href: "https://m1n.url.lol/goodreads",
+      href: "https://links.m1n.land/goodreads",
       icon: BookOpenText,
       label: "goodreads",
     },
@@ -46,7 +46,7 @@ export const footerLinks = [
   [
     { href: "/rss", icon: Rss, label: "rss" },
     {
-      href: "https://m1n.url.lol/nextjs-portfolio",
+      href: "https://links.m1n.land/nextjs-portfolio",
       icon: Code,
       label: "source-code",
     },

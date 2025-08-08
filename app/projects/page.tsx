@@ -12,7 +12,7 @@ const features = [
     name: "Miraviewer",
     description:
       "An all-in-one dashboard for efficiently managing sales, invoices, and reports.",
-    href: "https://m1n.url.lol/miraviewer",
+    href: "https://links.m1n.land/miraviewer",
     cta: "Visit Miraviewer",
     background: (
       <div className="absolute inset-0 bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800" />
@@ -23,7 +23,7 @@ const features = [
     Icon: ClipboardList,
     name: "Pastol",
     description: "Paste.lol Unofficial Command Line Interface.",
-    href: "https://m1n.url.lol/pastol-repo",
+    href: "https://links.m1n.land/pastol-repo",
     cta: "Visit repo",
     background: (
       <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700" />
@@ -34,7 +34,7 @@ const features = [
     Icon: RefreshCcwDot,
     name: "rusted-yadm",
     description: "A command-line dotfile manager.",
-    href: "https://m1n.url.lol/rusted-yadm",
+    href: "https://links.m1n.land/rusted-yadm",
     cta: "Visit repo",
     background: (
       <div className="absolute inset-0 bg-gradient-to-bl from-neutral-100 to-neutral-50 dark:from-neutral-700 dark:to-neutral-900" />
@@ -46,7 +46,7 @@ const features = [
     name: "RustedLessPass",
     description:
       "Access all your passwords anytime with one master password, no syncing needed.",
-    href: "https://m1n.url.lol/rustlesspass",
+    href: "https://links.m1n.land/rustlesspass",
     cta: "Visit RustedLessPass",
     background: (
       <div className="absolute inset-0 bg-gradient-to-tl from-neutral-200 to-neutral-50 dark:from-neutral-800 dark:to-neutral-900" />

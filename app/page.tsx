@@ -39,13 +39,32 @@ const texts = [
 ];
 
 const Page: React.FC = () => {
+  // Calculate cohesive timing
+  // "Hi, I'm " has 7 characters, so at 75ms per character = 525ms
+  // Add a small buffer of 200ms before morphing starts = 725ms
+  const typingDuration = 75;
+  const typingText = "Hi, I'm ";
+  const typingCompleteTime = (typingText.length * typingDuration) / 1000; // Convert to seconds
+  const morphingStartDelay = typingCompleteTime + 0.2; // Add 200ms buffer
+  const morphingCycleDuration = 2; // 2 seconds per morph cycle
+  const contentFadeDelay = morphingStartDelay + morphingCycleDuration * 0.75; // Start fading content 75% through first morph cycle
+
   return (
     <section>
       <div className="mb-8 text-2xl font-semibold tracking-tighter flex items-center">
-        <TypingAnimation duration={75} className="whitespace-nowrap">Hi, I'm&nbsp;</TypingAnimation>
-        <MorphingText texts={texts} className="min-w-[80px]" delay={75} />
+        <TypingAnimation 
+          duration={typingDuration} 
+          className="whitespace-nowrap"
+        >
+          Hi, I'm&nbsp;
+        </TypingAnimation>
+        <MorphingText 
+          texts={texts} 
+          className="min-w-[80px]" 
+          delay={morphingStartDelay * 1000} // Convert back to milliseconds
+        />
       </div>
-      <BlurFade delay={1.75} inView>
+      <BlurFade delay={contentFadeDelay} inView>
         <p className="mb-4">
           {`I love coding, thinking about philosophy, and playing games.`}
           <br />

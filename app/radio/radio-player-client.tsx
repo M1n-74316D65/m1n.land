@@ -247,7 +247,10 @@ export default function RadioPlayerClient() {
     if (!audio) return;
 
     const onLoadStart = () => {
-      setIsLoading(true);
+      // Only set loading if user has attempted to play
+      if (isPlaying || audio.readyState > 0) {
+        setIsLoading(true);
+      }
       setError(null);
     };
     const onCanPlay = () => {
@@ -283,7 +286,7 @@ export default function RadioPlayerClient() {
       audio.removeEventListener("abort", onAbort);
       audio.removeEventListener("stalled", onStalled);
     };
-  }, []);
+  }, [isPlaying]);
 
   // Actualizar volumen en audio y estado muted
   useEffect(() => {

@@ -30,12 +30,13 @@ export default function RadioPlayerClient() {
     artist: "Unknown Artist",
     isLoading: false,
   });
+  const [connectionStatus, setConnectionStatus] = useState<string>("");
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const radioUrl = "https://radio.m1n.land/";
   const stationName = "M1n Radio Station";
 
-  // Function to fetch current track info
+  // Function to fetch current track info from MPD
   const fetchCurrentTrack = useCallback(async () => {
     const timeoutId = setTimeout(() => {
       // Force stop loading after 5 seconds
@@ -49,63 +50,159 @@ export default function RadioPlayerClient() {
 
     try {
       setCurrentTrack(prev => ({ ...prev, isLoading: true }));
-      
-      // MPD-specific endpoints and common radio stream endpoints
-      const metadataEndpoints = [
-        // MPD HTTP endpoints
-        `${radioUrl}status`,
-        `${radioUrl}currentsong`,
-        `${radioUrl}stats.json`,
-        `${radioUrl}mpd/status`,
-        `${radioUrl}api/status`,
-        // Common radio endpoints
-        `${radioUrl}status-json.xsl`,
-        `${radioUrl}status.json`,
-        `${radioUrl}stats`,
-        `${radioUrl}api/nowplaying`,
-      ];
 
+      // Try MPD protocol first (direct connection)
       let trackInfo: { title: string; artist: string } | null = null;
 
-      // Try API endpoints with shorter timeout per request
-      for (const endpoint of metadataEndpoints) {
+      // Try MPD.FM HTTP interface first (most reliable for browser)
+      setConnectionStatus("Connecting to MPD...");
+      const mpdFmEndpoints = [
+        `${radioUrl}:4200/api/currentsong`,     // MPD.FM default port
+        `${radioUrl}/api/currentsong`,          // If proxied through web server
+        `${radioUrl}:4200/currentsong`,         // Alternative MPD.FM endpoint
+        `${radioUrl}/currentsong`,               // Proxied endpoint
+      ];
+
+      // Try MPD.FM HTTP endpoints first (most reliable)
+      for (const endpoint of mpdFmEndpoints) {
         try {
-          const controller = new AbortController();
-          const requestTimeout = setTimeout(() => controller.abort(), 2000);
-          
+          console.log('Trying MPD HTTP endpoint:', endpoint);
+          setConnectionStatus(`Trying ${endpoint}...`);
+
           const response = await fetch(endpoint, {
             method: 'GET',
             headers: {
-              'Accept': 'application/json, text/plain, text/html, */*',
+              'Accept': 'application/json, text/plain, */*',
               'Cache-Control': 'no-cache',
             },
-            signal: controller.signal,
+            signal: AbortSignal.timeout(3000),
           });
-
-          clearTimeout(requestTimeout);
 
           if (response.ok) {
             const contentType = response.headers.get('content-type') || '';
             let data;
-            
+
             if (contentType.includes('application/json')) {
               data = await response.json();
               trackInfo = parseJSONMetadata(data);
             } else {
               data = await response.text();
-              trackInfo = parseTextMetadata(data, endpoint);
+              // Try parsing as MPD response first, then fallback to text parsing
+              trackInfo = parseMPDResponse(data) || parseTextMetadata(data, endpoint);
             }
-            
+
             if (trackInfo) {
-              console.log('Found track info from:', endpoint, trackInfo);
+              console.log('Found track info from MPD.FM:', trackInfo);
+              setConnectionStatus("Connected to MPD.FM ✓");
               break;
             }
           }
-        } catch (e) {
-          if (e.name === 'AbortError') {
-            console.log('Request timeout for:', endpoint);
+        } catch (error) {
+          console.log(`HTTP endpoint failed for ${endpoint}:`, error.message);
+          continue;
+        }
+      }
+
+      // If HTTP endpoints failed, try direct MPD protocol (less likely to work from browser)
+      if (!trackInfo) {
+        setConnectionStatus("HTTP failed, trying direct MPD...");
+        const mpdDirectEndpoints = [
+          'http://radio.m1n.land:6600',
+          `${radioUrl}:6600`,
+        ];
+
+        for (const mpdEndpoint of mpdDirectEndpoints) {
+          try {
+            console.log('Trying direct MPD endpoint:', mpdEndpoint);
+            setConnectionStatus(`Trying direct MPD ${mpdEndpoint}...`);
+
+            const mpdResponse = await fetch(mpdEndpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'text/plain',
+              },
+              body: 'currentsong\n',
+              signal: AbortSignal.timeout(2000),
+            });
+
+            if (mpdResponse.ok) {
+              const mpdData = await mpdResponse.text();
+              console.log('MPD raw response:', mpdData);
+              trackInfo = parseMPDResponse(mpdData);
+              if (trackInfo) {
+                console.log('Found track info from direct MPD:', trackInfo);
+                setConnectionStatus("Connected to MPD directly ✓");
+                break;
+              }
+            }
+          } catch (mpdError) {
+            console.log(`Direct MPD connection failed for ${mpdEndpoint}:`, mpdError.message);
+            continue;
           }
-          continue; // Try next endpoint
+        }
+      }
+
+      if (!trackInfo) {
+        setConnectionStatus("MPD.FM failed, trying direct MPD...");
+        console.log('All MPD.FM connections failed, trying direct MPD protocol...');
+      }
+
+      // If MPD direct connection failed, try HTTP endpoints
+      if (!trackInfo) {
+        const metadataEndpoints = [
+          // MPD HTTP endpoints
+          `${radioUrl}status`,
+          `${radioUrl}currentsong`,
+          `${radioUrl}stats.json`,
+          `${radioUrl}mpd/status`,
+          `${radioUrl}api/status`,
+          // Common radio endpoints
+          `${radioUrl}status-json.xsl`,
+          `${radioUrl}status.json`,
+          `${radioUrl}stats`,
+          `${radioUrl}api/nowplaying`,
+        ];
+
+        // Try API endpoints with shorter timeout per request
+        for (const endpoint of metadataEndpoints) {
+          try {
+            const controller = new AbortController();
+            const requestTimeout = setTimeout(() => controller.abort(), 2000);
+
+            const response = await fetch(endpoint, {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json, text/plain, text/html, */*',
+                'Cache-Control': 'no-cache',
+              },
+              signal: controller.signal,
+            });
+
+            clearTimeout(requestTimeout);
+
+            if (response.ok) {
+              const contentType = response.headers.get('content-type') || '';
+              let data;
+
+              if (contentType.includes('application/json')) {
+                data = await response.json();
+                trackInfo = parseJSONMetadata(data);
+              } else {
+                data = await response.text();
+                trackInfo = parseTextMetadata(data, endpoint);
+              }
+
+              if (trackInfo) {
+                console.log('Found track info from:', endpoint, trackInfo);
+                break;
+              }
+            }
+          } catch (e) {
+            if (e.name === 'AbortError') {
+              console.log('Request timeout for:', endpoint);
+            }
+            continue; // Try next endpoint
+          }
         }
       }
 
@@ -224,9 +321,9 @@ export default function RadioPlayerClient() {
   // Parse "Artist - Title" or "Title - Artist" format
   const parseTitleArtist = (fullTitle: string): { title: string; artist: string } | null => {
     if (!fullTitle || fullTitle === '') return null;
-    
+
     const separators = [' - ', ' – ', ' — ', ': ', ' | '];
-    
+
     for (const sep of separators) {
       if (fullTitle.includes(sep)) {
         const parts = fullTitle.split(sep);
@@ -239,12 +336,52 @@ export default function RadioPlayerClient() {
         }
       }
     }
-    
+
     // If no separator found, treat as title only
     return {
       title: fullTitle,
       artist: stationName,
     };
+  };
+
+  // Parse MPD protocol response (key: value format)
+  const parseMPDResponse = (data: string): { title: string; artist: string } | null => {
+    try {
+      if (!data || typeof data !== 'string') return null;
+
+      const lines = data.split('\n');
+      let title = '';
+      let artist = '';
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed === 'OK' || trimmed === '') continue;
+
+        const colonIndex = trimmed.indexOf(':');
+        if (colonIndex > 0) {
+          const key = trimmed.substring(0, colonIndex).trim().toLowerCase();
+          const value = trimmed.substring(colonIndex + 1).trim();
+
+          if (key === 'title') {
+            title = value;
+          } else if (key === 'artist') {
+            artist = value;
+          }
+        }
+      }
+
+      if (title || artist) {
+        return {
+          title: title || 'Unknown Track',
+          artist: artist || 'Unknown Artist'
+        };
+      }
+
+      return null;
+    } catch (e) {
+      console.error('Error parsing MPD response:', e);
+      return null;
+    }
   };
 
   // Efecto para manejar eventos audio
@@ -464,6 +601,18 @@ export default function RadioPlayerClient() {
                         <p className="text-muted-foreground">
                           by {currentTrack.artist}
                         </p>
+                        {connectionStatus && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {connectionStatus}
+                          </p>
+                        )}
+                        <button
+                          onClick={() => fetchCurrentTrack()}
+                          className="text-xs text-blue-500 hover:text-blue-700 underline mt-1"
+                          disabled={currentTrack.isLoading}
+                        >
+                          Refresh track info
+                        </button>
                       </div>
                     )}
                   </div>

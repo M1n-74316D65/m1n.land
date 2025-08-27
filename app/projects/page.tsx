@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   ClipboardList,
   Store,
@@ -55,7 +56,7 @@ const features = [
   },
 ];
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Projects",
   description: "Check out my projects.",
 };

@@ -4,10 +4,16 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Play, Pause, Volume2, VolumeX, Radio, Music } from "lucide-react";
 import { Button } from "app/components/ui/button";
 import { Slider } from "app/components/ui/slider";
+import { Card, CardContent, CardHeader, CardTitle } from "app/components/ui/card";
+import { Badge } from "app/components/ui/badge";
+import { Progress } from "app/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "app/components/ui/tooltip";
 import { ShimmerButton } from "app/components/ui/magicui/shimmer-button";
 import { PulsatingButton } from "app/components/ui/magicui/pulsating-button";
 import { BorderBeam } from "app/components/ui/magicui/border-beam";
 import BlurFade from "app/components/ui/magicui/blur-fade";
+import { Meteors } from "app/components/ui/magicui/meteors";
+import { OrbitingCircles } from "app/components/ui/magicui/orbiting-circles";
 
 export default function RadioPlayerClient() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -387,102 +393,160 @@ export default function RadioPlayerClient() {
   }, [isMuted, volume]);
 
   return (
-    <section aria-label="Reproductor de radio online">
+    <section
+      aria-label="Reproductor de radio online"
+      className="relative"
+    >
+      {/* Background Effects */}
+      <div className="absolute inset-0 overflow-hidden">
+        <Meteors number={15} />
+      </div>
+
       {/* El título ahora está fuera del contenedor centrado */}
       <h1 className="text-2xl font-semibold mb-8 tracking-tight">My Radio</h1>
 
       {/* Este div centrará únicamente el reproductor */}
       <BlurFade delay={0.25} inView>
-        <div className="relative w-full max-w-md mx-auto p-6 rounded-2xl border border-border/20 bg-background/50 backdrop-blur-sm">
-          <BorderBeam size={250} duration={12} delay={9} />
-        <audio ref={audioRef} src={radioUrl} preload="none" />
+        <div className="relative z-10 w-full max-w-lg mx-auto">
+          <Card className="relative overflow-hidden border-0 bg-background/80 backdrop-blur-md shadow-2xl">
+            <BorderBeam size={300} duration={12} delay={9} />
+            <CardHeader className="text-center pb-4">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <Radio className="h-6 w-6 text-red-600" aria-hidden />
+                <CardTitle className="text-xl">{stationName}</CardTitle>
+                <Badge variant={isPlaying ? "default" : "secondary"} className="ml-2">
+                  {isPlaying ? "En Vivo" : "Detenido"}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6 relative">
+              <audio ref={audioRef} src={radioUrl} preload="none" />
 
-        {/* Información estación */}
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 mb-1 justify-center">
-            <Radio className="h-5 w-5 text-red-600" aria-hidden />
-            <h2 className="text-lg font-semibold">{stationName}</h2>
-          </div>
-          
-          {/* Now Playing section */}
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <Music className="h-4 w-4 text-muted-foreground" />
-            <div className="text-sm">
-              {currentTrack.isLoading ? (
-                <span className="text-muted-foreground">Loading track info...</span>
-              ) : (
-                <div className="space-y-1">
-                  <p className="font-medium text-foreground">
-                    {currentTrack.title}
-                  </p>
-                  <p className="text-muted-foreground">
-                    by {currentTrack.artist}
-                  </p>
+              {/* Orbiting Circles around the player */}
+              <div className="absolute inset-0 pointer-events-none">
+                <OrbitingCircles
+                  className="h-full w-full"
+                  reverse={isPlaying}
+                  duration={20}
+                  delay={0}
+                  radius={120}
+                  path={true}
+                >
+                  <div className="h-2 w-2 rounded-full bg-red-500" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+                  <div className="h-1 w-1 rounded-full bg-green-500" />
+                </OrbitingCircles>
+              </div>
+
+              {/* Loading Progress */}
+              {isLoading && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Loading stream...</span>
+                    <span>Please wait</span>
+                  </div>
+                  <Progress value={undefined} className="h-2" />
                 </div>
               )}
-            </div>
-          </div>
-        </div>
 
-        {/* Botón reproducir/pausar */}
-        <div className="flex justify-center mb-6">
-          <ShimmerButton
-            onClick={togglePlay}
-            className="h-16 w-16 rounded-full bg-gradient-to-tr from-red-500 to-red-700 shadow-lg hover:scale-105 transition-transform duration-150 focus:ring-4 focus:ring-red-300"
-            disabled={isLoading}
-            aria-label={isPlaying ? "Pausar radio" : "Reproducir radio"}
-            shimmerColor="#ffffff40"
-            shimmerDuration="2s"
-            background="linear-gradient(135deg, #ef4444, #dc2626)"
-          >
-            {isLoading ? (
-              <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
-            ) : isPlaying ? (
-              <Pause className="h-6 w-6" />
-            ) : (
-              <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
-            )}
-          </ShimmerButton>
-        </div>
+              {/* Now Playing section */}
+              <div className="text-center space-y-4">
+                <div className="flex items-center justify-center gap-2">
+                  <Music className="h-5 w-5 text-muted-foreground" />
+                  <div className="text-sm">
+                    {currentTrack.isLoading ? (
+                      <span className="text-muted-foreground">Loading track info...</span>
+                    ) : (
+                      <div className="space-y-1">
+                        <p className="font-semibold text-foreground text-base">
+                          {currentTrack.title}
+                        </p>
+                        <p className="text-muted-foreground">
+                          by {currentTrack.artist}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-        {/* Control de volumen */}
-        <div
-          className="flex items-center gap-4"
-          role="group"
-          aria-label="Control de volumen"
-        >
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleMute}
-            className="p-2 rounded-full hover:bg-accent focus:ring-2 focus:ring-accent"
-            aria-pressed={!isMuted}
-            aria-label={isMuted ? "Activar sonido" : "Silenciar"}
-          >
-            {isMuted || volume === 0 ? (
-              <VolumeX className="h-5 w-5 text-muted-foreground" />
-            ) : (
-              <Volume2 className="h-5 w-5 text-muted-foreground" />
-            )}
-          </Button>
-          <div className="flex-1 px-2">
-            <Slider
-              value={isMuted ? [0] : [Math.round(volume * 100)]}
-              onValueChange={onVolumeChange}
-              max={100}
-              step={1}
-              className="w-full"
-              aria-label="Volumen"
-            />
-          </div>
-          <span
-            className="text-xs text-muted-foreground w-8 text-right tabular-nums"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {isMuted ? 0 : Math.round(volume * 100)}
-          </span>
-        </div>
+              {/* Botón reproducir/pausar */}
+              <div className="flex justify-center mb-6">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <ShimmerButton
+                        onClick={togglePlay}
+                        className="h-16 w-16 rounded-full bg-gradient-to-tr from-red-500 to-red-700 shadow-lg hover:scale-105 transition-transform duration-150 focus:ring-4 focus:ring-red-300"
+                        disabled={isLoading}
+                        aria-label={isPlaying ? "Pausar radio" : "Reproducir radio"}
+                        shimmerColor="#ffffff40"
+                        shimmerDuration="2s"
+                        background="linear-gradient(135deg, #ef4444, #dc2626)"
+                      >
+                        {isLoading ? (
+                          <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
+                        ) : isPlaying ? (
+                          <Pause className="h-6 w-6" />
+                        ) : (
+                          <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+                        )}
+                      </ShimmerButton>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{isPlaying ? "Pause Radio" : "Play Radio"}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+
+              {/* Control de volumen */}
+              <div
+                className="flex items-center gap-4"
+                role="group"
+                aria-label="Control de volumen"
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={toggleMute}
+                        className="p-2 rounded-full hover:bg-accent focus:ring-2 focus:ring-accent"
+                        aria-pressed={!isMuted}
+                        aria-label={isMuted ? "Activar sonido" : "Silenciar"}
+                      >
+                        {isMuted || volume === 0 ? (
+                          <VolumeX className="h-5 w-5 text-muted-foreground" />
+                        ) : (
+                          <Volume2 className="h-5 w-5 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{isMuted ? "Unmute" : "Mute"}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <div className="flex-1 px-2">
+                  <Slider
+                    value={isMuted ? [0] : [Math.round(volume * 100)]}
+                    onValueChange={onVolumeChange}
+                    max={100}
+                    step={1}
+                    className="w-full"
+                    aria-label="Volumen"
+                  />
+                </div>
+                <span
+                  className="text-xs text-muted-foreground w-8 text-right tabular-nums"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  {isMuted ? 0 : Math.round(volume * 100)}
+                </span>
+              </div>
 
         {/* Indicador de estado */}
         <div
@@ -508,15 +572,17 @@ export default function RadioPlayerClient() {
           )}
         </div>
 
-        {/* Mensaje de error */}
-        {error && (
-          <p
-            role="alert"
-            className="mt-4 text-center text-sm text-red-600 font-semibold"
-          >
-            {error}
-          </p>
-        )}
+              {/* Mensaje de error */}
+              {error && (
+                <p
+                  role="alert"
+                  className="text-center text-sm text-red-600 font-semibold"
+                >
+                  {error}
+                </p>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </BlurFade>
     </section>

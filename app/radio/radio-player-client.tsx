@@ -1,19 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Play, Pause, Volume2, VolumeX, Radio, Music } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { Button } from "app/components/ui/button";
 import { Slider } from "app/components/ui/slider";
-import { Card, CardContent, CardHeader, CardTitle } from "app/components/ui/card";
-import { Badge } from "app/components/ui/badge";
 import { Progress } from "app/components/ui/progress";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "app/components/ui/tooltip";
-import { ShimmerButton } from "app/components/ui/magicui/shimmer-button";
-import { PulsatingButton } from "app/components/ui/magicui/pulsating-button";
-import { BorderBeam } from "app/components/ui/magicui/border-beam";
 import BlurFade from "app/components/ui/magicui/blur-fade";
-import { Meteors } from "app/components/ui/magicui/meteors";
-import { OrbitingCircles } from "app/components/ui/magicui/orbiting-circles";
 
 export default function RadioPlayerClient() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -21,20 +13,21 @@ export default function RadioPlayerClient() {
   const [isMuted, setIsMuted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentTrack, setCurrentTrack] = useState<{
-    title: string;
-    artist: string;
-    isLoading: boolean;
-  }>({
-    title: "Unknown Track",
-    artist: "Unknown Artist",
-    isLoading: false,
-  });
   const [connectionStatus, setConnectionStatus] = useState<string>("");
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const radioUrl = "https://radio.m1n.land/";
   const stationName = "M1n Radio Station";
+  
+  const [currentTrack, setCurrentTrack] = useState<{
+    title: string;
+    artist: string;
+    isLoading: boolean;
+  }>({
+    title: "Live Stream",
+    artist: stationName,
+    isLoading: false,
+  });
 
   // Function to fetch current track info from MPD
   const fetchCurrentTrack = useCallback(async () => {
@@ -210,8 +203,8 @@ export default function RadioPlayerClient() {
 
       if (trackInfo) {
         setCurrentTrack({
-          title: trackInfo.title || "Unknown Track",
-          artist: trackInfo.artist || "Unknown Artist",
+          title: trackInfo.title || "Live Stream",
+          artist: trackInfo.artist || stationName,
           isLoading: false,
         });
       } else {
@@ -304,7 +297,7 @@ export default function RadioPlayerClient() {
         }
         
         if (title || artist) {
-          return { title: title || 'Unknown Track', artist: artist || 'Unknown Artist' };
+          return { title: title || 'Live Stream', artist: artist || stationName };
         }
       }
       
@@ -372,8 +365,8 @@ export default function RadioPlayerClient() {
 
       if (title || artist) {
         return {
-          title: title || 'Unknown Track',
-          artist: artist || 'Unknown Artist'
+          title: title || 'Live Stream',
+          artist: artist || stationName
         };
       }
 
@@ -534,46 +527,12 @@ export default function RadioPlayerClient() {
       aria-label="Reproductor de radio online"
       className="relative"
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <Meteors number={15} />
-      </div>
-
-      {/* El título ahora está fuera del contenedor centrado */}
-      <h1 className="text-2xl font-semibold mb-8 tracking-tight">My Radio</h1>
-
       {/* Este div centrará únicamente el reproductor */}
       <BlurFade delay={0.25} inView>
-        <div className="relative z-10 w-full max-w-lg mx-auto">
-          <Card className="relative overflow-hidden border-0 bg-background/80 backdrop-blur-md shadow-2xl">
-            <BorderBeam size={300} duration={12} delay={9} />
-            <CardHeader className="text-center pb-4">
-              <div className="flex items-center justify-center gap-3 mb-2">
-                <Radio className="h-6 w-6 text-red-600" aria-hidden />
-                <CardTitle className="text-xl">{stationName}</CardTitle>
-                <Badge variant={isPlaying ? "default" : "secondary"} className="ml-2">
-                  {isPlaying ? "En Vivo" : "Detenido"}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6 relative">
+        <div className="relative w-full max-w-sm mx-auto">
+          <div className="p-6 space-y-6">
               <audio ref={audioRef} src={radioUrl} preload="none" />
 
-              {/* Orbiting Circles around the player */}
-              <div className="absolute inset-0 pointer-events-none">
-                <OrbitingCircles
-                  className="h-full w-full"
-                  reverse={isPlaying}
-                  duration={20}
-                  delay={0}
-                  radius={120}
-                  path={true}
-                >
-                  <div className="h-2 w-2 rounded-full bg-red-500" />
-                  <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-                  <div className="h-1 w-1 rounded-full bg-green-500" />
-                </OrbitingCircles>
-              </div>
 
               {/* Loading Progress */}
               {isLoading && (
@@ -586,99 +545,41 @@ export default function RadioPlayerClient() {
                 </div>
               )}
 
-              {/* Now Playing section */}
-              <div className="text-center space-y-4">
-                <div className="flex items-center justify-center gap-2">
-                  <Music className="h-5 w-5 text-muted-foreground" />
-                  <div className="text-sm">
-                    {currentTrack.isLoading ? (
-                      <span className="text-muted-foreground">Loading track info...</span>
-                    ) : (
-                      <div className="space-y-1">
-                        <p className="font-semibold text-foreground text-base">
-                          {currentTrack.title}
-                        </p>
-                        <p className="text-muted-foreground">
-                          by {currentTrack.artist}
-                        </p>
-                        {connectionStatus && (
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {connectionStatus}
-                          </p>
-                        )}
-                        <button
-                          onClick={() => fetchCurrentTrack()}
-                          className="text-xs text-blue-500 hover:text-blue-700 underline mt-1"
-                          disabled={currentTrack.isLoading}
-                        >
-                          Refresh track info
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
 
               {/* Botón reproducir/pausar */}
-              <div className="flex justify-center mb-6">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <ShimmerButton
-                        onClick={togglePlay}
-                        className="h-16 w-16 rounded-full bg-gradient-to-tr from-red-500 to-red-700 shadow-lg hover:scale-105 transition-transform duration-150 focus:ring-4 focus:ring-red-300"
-                        disabled={isLoading}
-                        aria-label={isPlaying ? "Pausar radio" : "Reproducir radio"}
-                        shimmerColor="#ffffff40"
-                        shimmerDuration="2s"
-                        background="linear-gradient(135deg, #ef4444, #dc2626)"
-                      >
-                        {isLoading ? (
-                          <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
-                        ) : isPlaying ? (
-                          <Pause className="h-6 w-6" />
-                        ) : (
-                          <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
-                        )}
-                      </ShimmerButton>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{isPlaying ? "Pause Radio" : "Play Radio"}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+              <div className="flex justify-center">
+                <Button
+                  onClick={togglePlay}
+                  className="h-16 w-16 rounded-full bg-primary hover:bg-primary/90 transition-all duration-200 shadow-[0_4px_14px_0_rgb(0,0,0,0.3)] hover:shadow-[0_6px_20px_0_rgb(0,0,0,0.4)] dark:shadow-[0_4px_14px_0_rgb(255,255,255,0.1)] dark:hover:shadow-[0_6px_20px_0_rgb(255,255,255,0.15)] hover:-translate-y-0.5"
+                  disabled={isLoading}
+                  aria-label={isPlaying ? "Pausar radio" : "Reproducir radio"}
+                >
+                  {isLoading ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary-foreground border-t-transparent" />
+                  ) : isPlaying ? (
+                    <Pause className="h-6 w-6" />
+                  ) : (
+                    <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+                  )}
+                </Button>
               </div>
 
               {/* Control de volumen */}
-              <div
-                className="flex items-center gap-4"
-                role="group"
-                aria-label="Control de volumen"
-              >
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={toggleMute}
-                        className="p-2 rounded-full hover:bg-accent focus:ring-2 focus:ring-accent"
-                        aria-pressed={!isMuted}
-                        aria-label={isMuted ? "Activar sonido" : "Silenciar"}
-                      >
-                        {isMuted || volume === 0 ? (
-                          <VolumeX className="h-5 w-5 text-muted-foreground" />
-                        ) : (
-                          <Volume2 className="h-5 w-5 text-muted-foreground" />
-                        )}
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{isMuted ? "Unmute" : "Mute"}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <div className="flex-1 px-2">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={toggleMute}
+                  className="p-2 hover:bg-accent transition-all duration-200 shadow-[0_2px_8px_0_rgb(0,0,0,0.15)] hover:shadow-[0_4px_12px_0_rgb(0,0,0,0.2)] dark:shadow-[0_2px_8px_0_rgb(255,255,255,0.1)] dark:hover:shadow-[0_4px_12px_0_rgb(255,255,255,0.15)] hover:-translate-y-0.5"
+                  aria-label={isMuted ? "Activar sonido" : "Silenciar"}
+                >
+                  {isMuted || volume === 0 ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
+                </Button>
+                <div className="flex-1">
                   <Slider
                     value={isMuted ? [0] : [Math.round(volume * 100)]}
                     onValueChange={onVolumeChange}
@@ -688,50 +589,23 @@ export default function RadioPlayerClient() {
                     aria-label="Volumen"
                   />
                 </div>
-                <span
-                  className="text-xs text-muted-foreground w-8 text-right tabular-nums"
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  {isMuted ? 0 : Math.round(volume * 100)}
-                </span>
               </div>
 
-        {/* Indicador de estado */}
-        <div
-          className="flex items-center justify-center gap-3 mt-6"
-          aria-live="polite"
-        >
-          {isPlaying ? (
-            <PulsatingButton
-              className="h-8 px-4 py-1 text-xs font-medium bg-red-600 text-white border-0"
-              pulseColor="#dc2626"
-              duration="2s"
-              disabled
-            >
-              En vivo
-            </PulsatingButton>
-          ) : (
-            <div className="flex items-center gap-2">
-              <div className="h-2.5 w-2.5 rounded-full bg-gray-400" aria-hidden />
-              <span className="text-xs text-muted-foreground font-medium">
-                {isLoading ? "Cargando..." : "Detenido"}
-              </span>
-            </div>
-          )}
-        </div>
+              {/* Status */}
+              {isPlaying && (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-sm text-muted-foreground">Live</span>
+                </div>
+              )}
 
-              {/* Mensaje de error */}
+              {/* Error */}
               {error && (
-                <p
-                  role="alert"
-                  className="text-center text-sm text-red-600 font-semibold"
-                >
+                <p className="text-center text-sm text-destructive">
                   {error}
                 </p>
               )}
-            </CardContent>
-          </Card>
+          </div>
         </div>
       </BlurFade>
     </section>

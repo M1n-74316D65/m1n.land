@@ -20,7 +20,7 @@ export const footerLinks = [
     },
     { href: "https://links.m1n.land/pastol", icon: Terminal, label: "pastol" },
     {
-      href: "https://sr.ht/~m1n/",
+      href: "https://links.m1n.land/sourcehut-profile",
       icon: Circle,
       label: "sourcehut",
     },

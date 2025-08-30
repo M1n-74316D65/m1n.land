@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 import { Button } from "app/components/ui/button";
-import { Slider } from "app/components/ui/slider";
+
 
 
 
@@ -11,7 +11,6 @@ import { Slider } from "app/components/ui/slider";
 export default function RadioPlayerClient() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.7);
-  const [isMuted, setIsMuted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -59,21 +58,16 @@ export default function RadioPlayerClient() {
     (value: number[]) => {
       const newVolume = value[0] / 100;
       setVolume(newVolume);
-      if (newVolume === 0) {
-        setIsMuted(true);
-      } else if (isMuted) {
-        setIsMuted(false);
-      }
     },
-    [isMuted],
+    [],
   );
 
-  // Actualizar volumen en audio y estado muted
+  // Actualizar volumen en audio
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    audio.volume = isMuted ? 0 : volume;
-  }, [volume, isMuted]);
+    audio.volume = volume;
+  }, [volume]);
 
   // Cleanup effect to reset loading state on unmount
   useEffect(() => {
@@ -134,15 +128,7 @@ export default function RadioPlayerClient() {
 
 
 
-  // Botón mute/unmute
-  const toggleMute = useCallback(() => {
-    if (isMuted) {
-      setIsMuted(false);
-      if (volume === 0) setVolume(0.7); // fallback volumen si estaba a 0
-    } else {
-      setIsMuted(true);
-    }
-  }, [isMuted, volume]);
+
 
   return (
     <section
@@ -184,28 +170,30 @@ export default function RadioPlayerClient() {
             </div>
 
             {/* Control de volumen */}
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleMute}
-                aria-label={isMuted ? "Activar sonido" : "Silenciar"}
-              >
-                {isMuted || volume === 0 ? (
-                  <VolumeX className="h-4 w-4" />
-                ) : (
-                  <Volume2 className="h-4 w-4" />
-                )}
-              </Button>
+            <div className="flex items-center">
               <div className="flex-1">
-                <Slider
-                  value={isMuted ? [0] : [Math.round(volume * 100)]}
-                  onValueChange={onVolumeChange}
-                  max={100}
-                  step={1}
-                  className="w-full"
-                  aria-label="Volumen"
-                />
+                <div className="relative w-full h-3 bg-muted/30 rounded-full overflow-hidden border border-muted/50">
+                  <div
+                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-primary/80 rounded-full transition-all duration-300 ease-out shadow-sm"
+                    style={{ width: `${Math.round(volume * 100)}%` }}
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={Math.round(volume * 100)}
+                    onChange={(e) => onVolumeChange([parseInt(e.target.value)])}
+                    className="absolute inset-0 w-full h-full cursor-pointer appearance-none bg-transparent"
+                    style={{
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      outline: 'none'
+                    }}
+                    aria-label="Volumen"
+                  />
+                  <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </div>
               </div>
             </div>
 

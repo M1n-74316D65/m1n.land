@@ -4,8 +4,9 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { Button } from "app/components/ui/button";
 import { Slider } from "app/components/ui/slider";
-import { Progress } from "app/components/ui/progress";
-import BlurFade from "app/components/ui/magicui/blur-fade";
+
+
+
 
 export default function RadioPlayerClient() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -52,6 +53,20 @@ export default function RadioPlayerClient() {
       audio.removeEventListener("stalled", onStalled);
     };
   }, [isPlaying]);
+
+  // Cambiar volumen desde slider
+  const onVolumeChange = useCallback(
+    (value: number[]) => {
+      const newVolume = value[0] / 100;
+      setVolume(newVolume);
+      if (newVolume === 0) {
+        setIsMuted(true);
+      } else if (isMuted) {
+        setIsMuted(false);
+      }
+    },
+    [isMuted],
+  );
 
   // Actualizar volumen en audio y estado muted
   useEffect(() => {
@@ -117,19 +132,7 @@ export default function RadioPlayerClient() {
     }
   }, [isPlaying]);
 
-  // Cambiar volumen desde slider
-  const onVolumeChange = useCallback(
-    (value: number[]) => {
-      const newVolume = value[0] / 100;
-      setVolume(newVolume);
-      if (newVolume === 0) {
-        setIsMuted(true);
-      } else if (isMuted) {
-        setIsMuted(false);
-      }
-    },
-    [isMuted],
-  );
+
 
   // Botón mute/unmute
   const toggleMute = useCallback(() => {
@@ -147,20 +150,15 @@ export default function RadioPlayerClient() {
       className="relative"
     >
       {/* Este div centrará únicamente el reproductor */}
-      <BlurFade delay={0.25} inView>
-        <div className="relative w-full max-w-sm mx-auto">
-          <div className="p-6 space-y-6">
+      <div className="relative w-full max-w-sm mx-auto">
+        <div className="p-3 space-y-3">
             <audio ref={audioRef} src={radioUrl} preload="none" />
 
 
-            {/* Loading Progress */}
+            {/* Loading */}
             {isLoading && (
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>Loading stream...</span>
-                  <span>Please wait</span>
-                </div>
-                <Progress value={undefined} className="h-2" />
+              <div className="flex justify-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary border-t-transparent" />
               </div>
             )}
 
@@ -169,7 +167,9 @@ export default function RadioPlayerClient() {
             <div className="flex justify-center">
               <Button
                 onClick={togglePlay}
-                className="h-16 w-16 rounded-full bg-primary hover:bg-primary/90 transition-all duration-200 shadow-[0_4px_14px_0_rgb(0,0,0,0.3)] hover:shadow-[0_6px_20px_0_rgb(0,0,0,0.4)] dark:shadow-[0_4px_14px_0_rgb(255,255,255,0.1)] dark:hover:shadow-[0_6px_20px_0_rgb(255,255,255,0.15)] hover:-translate-y-0.5"
+                variant="ghost"
+                size="lg"
+                className="h-12 w-12 rounded-full"
                 disabled={isLoading}
                 aria-label={isPlaying ? "Pausar radio" : "Reproducir radio"}
               >
@@ -189,7 +189,6 @@ export default function RadioPlayerClient() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleMute}
-                className="p-2 hover:bg-accent transition-all duration-200 shadow-[0_2px_8px_0_rgb(0,0,0,0.15)] hover:shadow-[0_4px_12px_0_rgb(0,0,0,0.2)] dark:shadow-[0_2px_8px_0_rgb(255,255,255,0.1)] dark:hover:shadow-[0_4px_12px_0_rgb(255,255,255,0.15)] hover:-translate-y-0.5"
                 aria-label={isMuted ? "Activar sonido" : "Silenciar"}
               >
                 {isMuted || volume === 0 ? (
@@ -210,13 +209,7 @@ export default function RadioPlayerClient() {
               </div>
             </div>
 
-            {/* Status */}
-            {isPlaying && (
-              <div className="flex items-center justify-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                <span className="text-sm text-muted-foreground">Live</span>
-              </div>
-            )}
+
 
             {/* Error */}
             {error && (
@@ -226,7 +219,6 @@ export default function RadioPlayerClient() {
             )}
           </div>
         </div>
-      </BlurFade>
     </section>
   );
 }

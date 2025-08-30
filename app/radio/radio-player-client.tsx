@@ -172,11 +172,58 @@ export default function RadioPlayerClient() {
             {/* Control de volumen */}
             <div className="flex items-center">
               <div className="flex-1">
-                <div className="relative w-full h-3 bg-muted/30 rounded-full overflow-hidden border border-muted/50">
+                <div className="relative w-full h-4 bg-gradient-to-r from-background/80 via-muted/20 to-background/80 rounded-full overflow-hidden border border-white/10 backdrop-blur-sm shadow-lg">
+                  {/* Animated background particles */}
+                  <div className="absolute inset-0 rounded-full overflow-hidden">
+                    {[...Array(8)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute w-1 h-1 bg-primary/30 rounded-full animate-pulse"
+                        style={{
+                          left: `${10 + i * 10}%`,
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          animationDelay: `${i * 0.2}s`,
+                          animationDuration: '2s'
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Volume fill with glassmorphism */}
                   <div
-                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary to-primary/80 rounded-full transition-all duration-300 ease-out shadow-sm"
+                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary/90 via-primary/70 to-primary/90 rounded-full transition-all duration-500 ease-out shadow-lg backdrop-blur-sm border border-white/20"
                     style={{ width: `${Math.round(volume * 100)}%` }}
-                  />
+                  >
+                    {/* Inner glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full animate-pulse" />
+                  </div>
+
+                  {/* Volume level indicator dots */}
+                  <div className="absolute top-0 left-0 h-full w-full flex items-center justify-between px-1">
+                    {[...Array(10)].map((_, i) => (
+                      <div
+                        key={i}
+                        className={`w-0.5 h-1 rounded-full transition-all duration-300 ${
+                          i < Math.round(volume * 10)
+                            ? 'bg-white/80 shadow-sm'
+                            : 'bg-muted-foreground/30'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Custom slider thumb */}
+                  <div
+                    className="absolute top-1/2 transform -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg border border-primary/50 transition-all duration-200 z-20"
+                    style={{
+                      left: `calc(${Math.round(volume * 100)}% - 6px)`,
+                      boxShadow: '0 0 10px rgba(var(--primary), 0.3), 0 2px 8px rgba(0,0,0,0.2)'
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-white to-primary/20 rounded-full animate-pulse" />
+                  </div>
+
                   <input
                     type="range"
                     min="0"
@@ -184,7 +231,7 @@ export default function RadioPlayerClient() {
                     step="1"
                     value={Math.round(volume * 100)}
                     onChange={(e) => onVolumeChange([parseInt(e.target.value)])}
-                    className="absolute inset-0 w-full h-full cursor-pointer appearance-none bg-transparent"
+                    className="absolute inset-0 w-full h-full cursor-pointer appearance-none bg-transparent z-10"
                     style={{
                       WebkitAppearance: 'none',
                       MozAppearance: 'none',
@@ -192,7 +239,9 @@ export default function RadioPlayerClient() {
                     }}
                     aria-label="Volumen"
                   />
-                  <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                  {/* Hover glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </div>
               </div>
             </div>

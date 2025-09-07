@@ -44,7 +44,7 @@ export const footerLinks = [
     },
   ],
   [
-    { href: "/rss", icon: Rss, label: "rss" },
+    { href: "https://journal.m1n.land/atom.xml", icon: Rss, label: "rss" },
     {
       href: "https://links.m1n.land/nextjs-portfolio",
       icon: Code,

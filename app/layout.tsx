@@ -1,6 +1,7 @@
 import { FC, ReactNode, useMemo } from "react";
 import "./global.css";
 import type { Metadata } from "next";
+import { Analytics } from '@vercel/analytics/next';
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navbar from "app/components/nav";
@@ -63,7 +64,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
         <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
           <Navbar />
           {children}
-          <script defer src="https://analytics.m1n.land/script.js" data-website-id="e4401712-aaa9-47be-8eac-b48775484470"></script>
+          <Analytics />
         </main>
       </body>
     </html>

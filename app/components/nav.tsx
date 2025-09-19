@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { navItems } from "app/constants/navItems";
+import { designSystem } from "app/lib/design-system";
 
 const ScrollProgress = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -57,8 +58,8 @@ const Navbar = React.memo(() => {
                     <Link
                       key={path}
                       href={path}
-                      className={`transition-all duration-200 hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative py-1 px-2 m-1 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800/50 focus:outline-none ${
-                        isActive ? 'text-neutral-900 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-800/50' : ''
+                      className={`${designSystem.interactions.navItem} px-2 m-1 flex align-middle relative py-1 focus:outline-none ${
+                        isActive ? 'bg-accent text-accent-foreground' : ''
                       }`}
                       {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       aria-label={isExternal ? `${name} (opens in new tab)` : name}

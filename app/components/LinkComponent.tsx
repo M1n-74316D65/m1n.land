@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { designSystem } from "app/lib/design-system";
 
 interface LinkComponentProps {
   href: string;
@@ -9,7 +10,7 @@ interface LinkComponentProps {
 const LinkComponent: React.FC<LinkComponentProps> = React.memo(
   ({ href, text }) => (
     <Link
-      className="hover:text-neutral-800 dark:hover:text-neutral-100 text-neutral-600 dark:text-neutral-300"
+      className={designSystem.colors.text.link}
       rel="noopener noreferrer"
       target="_blank"
       href={href}

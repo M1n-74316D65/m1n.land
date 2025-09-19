@@ -6,6 +6,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navbar from "app/components/nav";
 import { baseUrl } from "./sitemap";
+import { designSystem } from "app/lib/design-system";
 
 // Metadata configuration
 const siteMetadata: Metadata = {
@@ -61,7 +62,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en" className={htmlClassName}>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
-        <main className="flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+        <main className={`flex-auto min-w-0 ${designSystem.spacing.component.section} flex flex-col px-2 md:px-0`}>
           <Navbar />
           {children}
           <Analytics />

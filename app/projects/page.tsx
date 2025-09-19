@@ -6,6 +6,7 @@ import {
   TextCursorInput,
 } from "lucide-react";
 import { BentoCard, BentoGrid } from "app/components/ui/bento-grid";
+import { designSystem } from "app/lib/design-system";
 
 const features = [
   {
@@ -16,7 +17,7 @@ const features = [
     href: "https://links.m1n.land/miraviewer",
     cta: "Visit Miraviewer",
     background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800" />
+      <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />
     ),
     className: "lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2",
   },
@@ -27,7 +28,7 @@ const features = [
     href: "https://links.m1n.land/pastol-repo",
     cta: "Visit repo",
     background: (
-      <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-700" />
+      <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />
     ),
     className: "lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2",
   },
@@ -38,7 +39,7 @@ const features = [
     href: "https://links.m1n.land/rusted-yadm",
     cta: "Visit repo",
     background: (
-      <div className="absolute inset-0 bg-gradient-to-bl from-neutral-100 to-neutral-50 dark:from-neutral-700 dark:to-neutral-900" />
+      <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />
     ),
     className: "lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3",
   },
@@ -50,7 +51,7 @@ const features = [
     href: "https://links.m1n.land/rustlesspass",
     cta: "Visit RustedLessPass",
     background: (
-      <div className="absolute inset-0 bg-gradient-to-tl from-neutral-200 to-neutral-50 dark:from-neutral-800 dark:to-neutral-900" />
+      <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />
     ),
     className: "lg:col-start-2 lg:col-end-4 lg:row-start-2 lg:row-end-3",
   },
@@ -64,7 +65,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <section>
-      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">
+      <h1 className={`${designSystem.spacing.component.header} font-semibold text-2xl tracking-tighter`}>
         My Projects
       </h1>
       <div>

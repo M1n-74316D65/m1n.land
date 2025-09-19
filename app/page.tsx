@@ -5,6 +5,7 @@ import BlurFade from "app/components/ui/magicui/blur-fade";
 import Footer from "app/components/footer/footer";
 import LinkComponent from "app/components/LinkComponent";
 import React from "react";
+import { designSystem } from "app/lib/design-system";
 
 const links = [
   {
@@ -51,7 +52,7 @@ const Page: React.FC = () => {
 
   return (
     <section>
-      <div className="mb-8 text-2xl font-semibold tracking-tighter flex items-center">
+      <div className={`${designSystem.spacing.component.header} text-2xl font-semibold tracking-tighter flex items-center`}>
         <TypingAnimation 
           duration={typingDuration} 
           className="whitespace-nowrap"
@@ -65,7 +66,7 @@ const Page: React.FC = () => {
         />
       </div>
       <BlurFade delay={contentFadeDelay} inView>
-        <p className="mb-4">
+        <p className={designSystem.spacing.component.section}>
           {`I love coding, thinking about philosophy, and playing games.`}
           <br />
           {`Linux user. `}

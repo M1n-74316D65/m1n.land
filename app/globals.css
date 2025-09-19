@@ -37,6 +37,15 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Semantic color mappings */
+  --text-primary: hsl(var(--foreground));
+  --text-secondary: hsl(var(--muted-foreground));
+  --text-accent: hsl(var(--primary));
+  --bg-primary: hsl(var(--background));
+  --bg-secondary: hsl(var(--card));
+  --bg-accent: hsl(var(--accent));
+  --border-primary: hsl(var(--border));
 }
 
 .dark {
@@ -174,6 +183,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Semantic utility classes */
+.text-semantic-primary { color: var(--text-primary); }
+.text-semantic-secondary { color: var(--text-secondary); }
+.text-semantic-accent { color: var(--text-accent); }
+.bg-semantic-primary { background-color: var(--bg-primary); }
+.bg-semantic-secondary { background-color: var(--bg-secondary); }
+.bg-semantic-accent { background-color: var(--bg-accent); }
+.border-semantic { border-color: var(--border-primary); }
 
 /* Hide scrollbar */
 html, body {

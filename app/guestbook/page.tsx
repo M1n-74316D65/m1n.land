@@ -3,6 +3,7 @@ import { Input } from 'app/components/ui/input';
 import { Textarea } from "app/components/ui/textarea"
 import Script from 'next/script';
 import Link from 'next/link';
+import { designSystem } from "app/lib/design-system";
 
 export const metadata = {
   title: "Guestbook",
@@ -11,7 +12,7 @@ export const metadata = {
 export default function Page() {
   return (
     <section>
-      <h1 className="font-semibold text-2xl mb-8 tracking-tighter">
+      <h1 className={`${designSystem.spacing.component.header} font-semibold text-2xl tracking-tighter`}>
         My Guestbook
       </h1>
 
@@ -70,7 +71,7 @@ export default function Page() {
             <Link 
               target="_blank" 
               href="https://guestbooks.meadow.cafe"
-              className="hover:underline"
+              className={designSystem.colors.text.link}
             >
               Guestbooks
             </Link>
@@ -78,7 +79,7 @@ export default function Page() {
         </div>
 
         <div className="border-t pt-6">
-          <h3 id="guestbooks___guestbook-messages-header" className="font-semibold text-lg mb-4 tracking-tight">
+          <h3 id="guestbooks___guestbook-messages-header" className={`${designSystem.spacing.component.header} font-semibold text-lg tracking-tight`}>
             Messages
           </h3>
           <div id="guestbooks___guestbook-messages-container"></div>

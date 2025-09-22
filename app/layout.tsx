@@ -1,10 +1,11 @@
 import { FC, ReactNode, useMemo } from "react";
 import "./global.css";
 import type { Metadata } from "next";
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from "@vercel/analytics/next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navbar from "app/components/nav";
+import Particles from "app/components/ui/magicui/particles";
 import { baseUrl } from "./sitemap";
 import { designSystem } from "app/lib/design-system";
 
@@ -62,7 +63,18 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
   return (
     <html lang="en" className={htmlClassName}>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
-        <main className={`flex-auto min-w-0 ${designSystem.spacing.component.section} flex flex-col px-2 md:px-0`}>
+        <Particles
+          className="fixed inset-0 -z-10"
+          quantity={Math.floor(Math.PI * 10)}
+          staticity={40}
+          ease={60}
+          color="#888888"
+          vx={Math.PI / 12}
+          vy={Math.PI / 12}
+        />
+        <main
+          className={`flex-auto min-w-0 ${designSystem.spacing.component.section} flex flex-col px-2 md:px-0`}
+        >
           <Navbar />
           {children}
           <Analytics />

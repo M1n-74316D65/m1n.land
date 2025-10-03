@@ -72,22 +72,8 @@ const Page: React.FC = () => {
           {`Linux user. `}
           <LinkComponent href={links[0].href} text={links[0].text} />
           {` as the most entertaining language.`}
-          <br />
-          {`Trying to escape from VS Code to `}
-          <LinkComponent href={links[1].href} text={links[1].text} />
-          {` and (`}
-          <LinkComponent href={links[2].href} text={links[2].text} />
-          {`, `}
-          <LinkComponent href={links[3].href} text={links[3].text} />
-          {`).`}
-          <br />
-          {`Furthermore, learning `}
-          <LinkComponent href={links[4].href} text={links[4].text} />
-          {` and trying to learn `}
-          <LinkComponent href={links[5].href} text={links[5].text} />
-          {` (seems to be efficient).`}
         </p>
-        <div className="pt-4">
+        <div>
           <Footer />
         </div>
       </BlurFade>

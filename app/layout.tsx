@@ -1,7 +1,6 @@
 import { FC, ReactNode, useMemo } from "react";
 import "./global.css";
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navbar from "app/components/nav";
@@ -77,8 +76,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
         >
           <Navbar />
           {children}
-          <Analytics />
-        </main>
+          </main>
       </body>
     </html>
   );

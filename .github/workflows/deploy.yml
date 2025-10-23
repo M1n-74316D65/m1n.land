@@ -30,4 +30,4 @@ jobs:
           user: m1n
           key: ${{ secrets.PRIVATE_KEY }}
           src: "./out/"
-          project: "m1n-land"
+          project: "land"

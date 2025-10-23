@@ -1,6 +1,9 @@
-import { baseUrl } from 'app/sitemap'
+import { MetadataRoute } from 'next'
+import { baseUrl } from 'app/constants/baseUrl'
 
-export default function robots() {
+export const dynamic = 'force-static'
+
+export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {

@@ -6,7 +6,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navbar from "app/components/nav";
 import Particles from "app/components/ui/magicui/particles";
-import { baseUrl } from "./sitemap";
+import { baseUrl } from "app/constants/baseUrl";
 import { designSystem } from "app/lib/design-system";
 
 // Metadata configuration

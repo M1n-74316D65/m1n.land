@@ -1,7 +1,9 @@
-export const baseUrl = 'https://m1n.land'
+import { MetadataRoute } from 'next'
+import { baseUrl } from 'app/constants/baseUrl'
 
-export default async function sitemap() {
+export const dynamic = 'force-static'
 
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let routes = ['', '/blog'].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString().split('T')[0],

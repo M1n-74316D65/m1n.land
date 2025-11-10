@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Play, Pause, Plus, Minus } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { Button } from "app/components/ui/button";
 
 export default function RadioPlayerClient() {
@@ -9,10 +9,7 @@ export default function RadioPlayerClient() {
   const [volume, setVolume] = useState(0.5);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isDecreasing, setIsDecreasing] = useState(false);
-  const [isIncreasing, setIsIncreasing] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const radioUrl = "https://radio.m1n.land/";
 
@@ -52,70 +49,22 @@ export default function RadioPlayerClient() {
     };
   }, [isPlaying]);
 
-  // Volume increment/decrement functions
+  // Volume change handler
+  const handleVolumeChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setVolume(parseFloat(e.target.value));
+    },
+    [],
+  );
+
+  // Volume increment/decrement for keyboard
   const increaseVolume = useCallback(() => {
-    setVolume((prev) => Math.min(prev + 0.01, 1));
+    setVolume((prev) => Math.min(prev + 0.05, 1));
   }, []);
 
   const decreaseVolume = useCallback(() => {
-    setVolume((prev) => Math.max(prev - 0.01, 0));
+    setVolume((prev) => Math.max(prev - 0.05, 0));
   }, []);
-
-  // Start continuous volume change
-  const startVolumeChange = useCallback(
-    (direction: "increase" | "decrease") => {
-      // Initial change
-      if (direction === "increase") {
-        setIsIncreasing(true);
-        increaseVolume();
-      } else {
-        setIsDecreasing(true);
-        decreaseVolume();
-      }
-
-      // Set up interval for continuous changes
-      intervalRef.current = setInterval(() => {
-        if (direction === "increase") {
-          increaseVolume();
-        } else {
-          decreaseVolume();
-        }
-      }, 100); // Change every 100ms while holding
-    },
-    [increaseVolume, decreaseVolume],
-  );
-
-  // Stop continuous volume change
-  const stopVolumeChange = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    setIsIncreasing(false);
-    setIsDecreasing(false);
-  }, []);
-
-  // Global mouse up listener to stop volume changes when releasing anywhere
-  useEffect(() => {
-    const handleGlobalMouseUp = () => {
-      stopVolumeChange();
-    };
-
-    const handleGlobalTouchEnd = () => {
-      stopVolumeChange();
-    };
-
-    document.addEventListener("mouseup", handleGlobalMouseUp);
-    document.addEventListener("touchend", handleGlobalTouchEnd);
-
-    return () => {
-      document.removeEventListener("mouseup", handleGlobalMouseUp);
-      document.removeEventListener("touchend", handleGlobalTouchEnd);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [stopVolumeChange]);
 
   // Actualizar volumen en audio
   useEffect(() => {
@@ -210,16 +159,9 @@ export default function RadioPlayerClient() {
 
   return (
     <section aria-label="Reproductor de radio online" className="relative">
-      <div className="relative w-full max-w-xs mx-auto">
-        <div className="bg-background/80 backdrop-blur-md border border-border/50 rounded-2xl shadow-lg shadow-black/5 p-6 space-y-4">
+      <div className="relative w-full max-w-sm mx-auto">
+        <div className="bg-background/95 backdrop-blur-xl border border-border/40 rounded-xl shadow-sm p-8 space-y-6">
           <audio ref={audioRef} src={radioUrl} preload="none" />
-
-          {/* Loading State */}
-          {isLoading && (
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-4 w-4 border border-muted-foreground/20 border-t-muted-foreground/60" />
-            </div>
-          )}
 
           {/* Play/Pause Button */}
           <div className="flex justify-center">
@@ -227,67 +169,89 @@ export default function RadioPlayerClient() {
               onClick={togglePlay}
               variant="ghost"
               size="sm"
-              className="h-9 w-9 rounded-full bg-muted/30 hover:bg-muted/50 border border-border/30 shadow-sm transition-all duration-200 hover:shadow-md"
+              className="h-12 w-12 rounded-full bg-gradient-to-b from-muted/40 to-muted/20 hover:from-muted/50 hover:to-muted/30 border border-border/50 shadow-sm transition-all duration-200 hover:scale-105 active:scale-95"
               disabled={isLoading}
               aria-label={isPlaying ? "Pausar radio" : "Reproducir radio"}
             >
               {isLoading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border border-muted-foreground/30 border-t-muted-foreground/60" />
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-muted-foreground/20 border-t-muted-foreground" />
               ) : isPlaying ? (
-                <Pause className="h-4 w-4 text-foreground/80" />
+                <Pause className="h-5 w-5 text-foreground" />
               ) : (
-                <Play
-                  className="h-4 w-4 ml-0.5 text-foreground/80"
-                  fill="currentColor"
-                />
+                <Play className="h-5 w-5 ml-0.5 text-foreground" fill="currentColor" />
               )}
             </Button>
           </div>
 
-          {/* Volume Control */}
-          <div className="flex items-center justify-center gap-2">
-            <Button
-              onMouseDown={() => startVolumeChange("decrease")}
-              onMouseUp={stopVolumeChange}
-              onMouseLeave={stopVolumeChange}
-              onTouchStart={() => startVolumeChange("decrease")}
-              onTouchEnd={stopVolumeChange}
-              variant="ghost"
-              size="sm"
-              className={`h-6 w-6 rounded-md bg-muted/20 hover:bg-muted/30 border border-border/20 transition-all duration-200 ${
-                isDecreasing ? "bg-muted/40 scale-95" : ""
-              }`}
-              aria-label="Disminuir volumen"
-            >
-              <Minus className="h-3 w-3 text-foreground/60" />
-            </Button>
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex justify-center">
+              <span className="text-xs text-muted-foreground/60">Conectando...</span>
+            </div>
+          )}
 
-            <div className="w-8 text-center">
-              <span className="text-xs text-muted-foreground/60 font-medium">
+          {/* Volume Control */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-3 px-1">
+              {volume === 0 ? (
+                <VolumeX className="h-4 w-4 text-muted-foreground/60 flex-shrink-0" />
+              ) : (
+                <Volume2 className="h-4 w-4 text-muted-foreground/60 flex-shrink-0" />
+              )}
+              
+              <div className="flex-1 relative group">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="w-full h-1.5 bg-muted/30 rounded-full appearance-none cursor-pointer transition-all
+                    [&::-webkit-slider-thumb]:appearance-none
+                    [&::-webkit-slider-thumb]:w-3
+                    [&::-webkit-slider-thumb]:h-3
+                    [&::-webkit-slider-thumb]:rounded-full
+                    [&::-webkit-slider-thumb]:bg-gradient-to-b
+                    [&::-webkit-slider-thumb]:from-background
+                    [&::-webkit-slider-thumb]:to-muted
+                    [&::-webkit-slider-thumb]:border
+                    [&::-webkit-slider-thumb]:border-border/50
+                    [&::-webkit-slider-thumb]:shadow-sm
+                    [&::-webkit-slider-thumb]:cursor-pointer
+                    [&::-webkit-slider-thumb]:transition-transform
+                    [&::-webkit-slider-thumb]:hover:scale-110
+                    [&::-webkit-slider-thumb]:active:scale-95
+                    [&::-moz-range-thumb]:w-3
+                    [&::-moz-range-thumb]:h-3
+                    [&::-moz-range-thumb]:rounded-full
+                    [&::-moz-range-thumb]:bg-gradient-to-b
+                    [&::-moz-range-thumb]:from-background
+                    [&::-moz-range-thumb]:to-muted
+                    [&::-moz-range-thumb]:border
+                    [&::-moz-range-thumb]:border-border/50
+                    [&::-moz-range-thumb]:shadow-sm
+                    [&::-moz-range-thumb]:cursor-pointer
+                    [&::-moz-range-thumb]:transition-transform
+                    [&::-moz-range-thumb]:hover:scale-110
+                    [&::-moz-range-thumb]:active:scale-95
+                    hover:bg-muted/40"
+                  aria-label="Control de volumen"
+                  style={{
+                    background: `linear-gradient(to right, hsl(var(--foreground) / 0.4) 0%, hsl(var(--foreground) / 0.4) ${volume * 100}%, hsl(var(--muted) / 0.3) ${volume * 100}%, hsl(var(--muted) / 0.3) 100%)`
+                  }}
+                />
+              </div>
+
+              <span className="text-xs text-muted-foreground/60 font-medium tabular-nums w-9 text-right">
                 {Math.round(volume * 100)}%
               </span>
             </div>
-
-            <Button
-              onMouseDown={() => startVolumeChange("increase")}
-              onMouseUp={stopVolumeChange}
-              onMouseLeave={stopVolumeChange}
-              onTouchStart={() => startVolumeChange("increase")}
-              onTouchEnd={stopVolumeChange}
-              variant="ghost"
-              size="sm"
-              className={`h-6 w-6 rounded-md bg-muted/20 hover:bg-muted/30 border border-border/20 transition-all duration-200 ${
-                isIncreasing ? "bg-muted/40 scale-95" : ""
-              }`}
-              aria-label="Aumentar volumen"
-            >
-              <Plus className="h-3 w-3 text-foreground/60" />
-            </Button>
           </div>
 
           {/* Error State */}
           {error && (
-            <p className="text-center text-xs text-muted-foreground/70 font-medium">
+            <p className="text-center text-xs text-destructive/80 font-medium">
               {error}
             </p>
           )}

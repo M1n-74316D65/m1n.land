@@ -29,7 +29,6 @@ tasks:
       bun run build
       # Install Vercel CLI
       bun install -g vercel
-      
+
       # Deploy to Vercel using the provided token
       vercel --prod --yes --token $VERCEL_TOKEN
-

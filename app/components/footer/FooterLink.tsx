@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { FC } from "react";
-import { LucideIcon } from "lucide-react";
+import Link from 'next/link'
+import { FC } from 'react'
+import { LucideIcon } from 'lucide-react'
 
 interface FooterLinkProps {
-  href: string;
-  icon: LucideIcon;
-  label: string;
+  href: string
+  icon: LucideIcon
+  label: string
 }
 
 const FooterLink: FC<FooterLinkProps> = ({ href, icon: Icon, label }) => (
@@ -20,6 +20,6 @@ const FooterLink: FC<FooterLinkProps> = ({ href, icon: Icon, label }) => (
       <p className="ml-2 h-7">{label}</p>
     </Link>
   </li>
-);
+)
 
-export default FooterLink;
+export default FooterLink

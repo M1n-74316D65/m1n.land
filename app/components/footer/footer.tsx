@@ -1,7 +1,7 @@
-import { FC } from "react";
-import FooterSection from "./FooterSection";
-import { footerLinks } from "app/constants/footerLinks";
-import { designSystem } from "app/lib/design-system";
+import { FC } from 'react'
+import FooterSection from './FooterSection'
+import { footerLinks } from 'app/constants/footerLinks'
+import { designSystem } from 'app/lib/design-system'
 
 const Footer: FC = () => {
   return (
@@ -10,7 +10,7 @@ const Footer: FC = () => {
         <FooterSection key={index} links={links} />
       ))}
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

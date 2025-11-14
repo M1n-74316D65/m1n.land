@@ -1,28 +1,30 @@
-import { FC, ReactNode, useMemo } from "react";
-import "./global.css";
-import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
-import Navbar from "app/components/nav";
-import Particles from "app/components/ui/magicui/particles";
-import { baseUrl } from "app/constants/baseUrl";
-import { designSystem } from "app/lib/design-system";
+import { FC, ReactNode, useMemo } from 'react'
+import './global.css'
+import type { Metadata } from 'next'
+import { GeistSans } from 'geist/font/sans'
+import { GeistMono } from 'geist/font/mono'
+import Navbar from 'app/components/nav'
+import Particles from 'app/components/ui/magicui/particles'
+import DarkModeDetector from 'app/components/ui/dark-mode-detector'
+import { baseUrl } from 'app/constants/baseUrl'
+import { designSystem } from 'app/lib/design-system'
 
 // Metadata configuration
 const siteMetadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "M1n",
-    template: "%s | M1n",
+    default: 'M1n',
+    template: '%s | M1n',
   },
-  description: "M1n portfolio.",
+  description: 'M1n portfolio - Developer, Linux enthusiast, and creator of open source projects.',
   openGraph: {
-    title: "M1n",
-    description: "M1n portfolio.",
+    title: 'M1n',
+    description:
+      'M1n portfolio - Developer, Linux enthusiast, and creator of open source projects.',
     url: baseUrl,
-    siteName: "M1n",
-    locale: "en_US",
-    type: "website",
+    siteName: 'M1n',
+    locale: 'en_US',
+    type: 'website',
   },
   robots: {
     index: true,
@@ -30,37 +32,54 @@ const siteMetadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-};
+}
 
-export const metadata = siteMetadata;
+export const metadata = siteMetadata
 
 // Utility function for class names
 const cx = (...classes: (string | boolean | undefined)[]): string =>
-  classes.filter(Boolean).join(" ");
+  classes.filter(Boolean).join(' ')
 
 // RootLayout component
 interface RootLayoutProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 const RootLayout: FC<RootLayoutProps> = ({ children }) => {
   const htmlClassName = useMemo(
     () =>
       cx(
-        "text-black bg-white dark:text-white dark:bg-black",
+        'text-black bg-white dark:text-white dark:bg-black',
         GeistSans.variable,
-        GeistMono.variable,
+        GeistMono.variable
       ),
-    [],
-  );
+    []
+  )
 
   return (
     <html lang="en" className={htmlClassName}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Person',
+              name: 'M1n',
+              url: baseUrl,
+              sameAs: ['https://m1n.omg.lol'],
+              description: 'Developer, Linux enthusiast, and creator of open source projects',
+              knowsAbout: ['Rust', 'Go', 'Next.js', 'Linux', 'Neovim', 'Zed'],
+              jobTitle: 'Developer',
+            }),
+          }}
+        />
+      </head>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
         <Particles
           className="fixed inset-0 -z-10"
@@ -74,12 +93,13 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
         <main
           className={`flex-auto min-w-0 ${designSystem.spacing.component.section} flex flex-col px-2 md:px-0`}
         >
+          <DarkModeDetector />
           <Navbar />
           {children}
-          </main>
+        </main>
       </body>
     </html>
-  );
-};
+  )
+}
 
-export default RootLayout;
+export default RootLayout

@@ -9,53 +9,53 @@ import {
   Code,
   LayoutTemplate,
   Circle,
-} from "lucide-react";
+} from 'lucide-react'
 
 export const footerLinks = [
   [
     {
-      href: "https://links.m1n.land/rustlesspass",
+      href: 'https://links.m1n.land/rustlesspass',
       icon: LockKeyhole,
-      label: "rustedlesspass",
+      label: 'rustedlesspass',
     },
-    { href: "https://links.m1n.land/pastol", icon: Terminal, label: "pastol" },
+    { href: 'https://links.m1n.land/pastol', icon: Terminal, label: 'pastol' },
     {
-      href: "https://links.m1n.land/sourcehut-profile",
+      href: 'https://links.m1n.land/sourcehut-profile',
       icon: Circle,
-      label: "sourcehut",
+      label: 'sourcehut',
     },
     {
-      href: "https://links.m1n.land/github-profile",
+      href: 'https://links.m1n.land/github-profile',
       icon: Github,
-      label: "github",
+      label: 'github',
     },
   ],
   [
     {
-      href: "https://m1n.omg.lol",
+      href: 'https://m1n.omg.lol',
       icon: CircleUserRound,
-      label: "webprofile",
+      label: 'webprofile',
     },
-    { href: "mailto:public@m1n.land", icon: AtSign, label: "email" },
+    { href: 'mailto:public@m1n.land', icon: AtSign, label: 'email' },
     {
-      href: "https://links.m1n.land/goodreads",
+      href: 'https://links.m1n.land/goodreads',
       icon: BookOpenText,
-      label: "goodreads",
+      label: 'goodreads',
     },
   ],
   [
-    { href: "https://journal.m1n.land/atom.xml", icon: Rss, label: "rss" },
+    { href: 'https://journal.m1n.land/atom.xml', icon: Rss, label: 'rss' },
     {
-      href: "https://links.m1n.land/nextjs-portfolio",
+      href: 'https://links.m1n.land/nextjs-portfolio',
       icon: Code,
-      label: "source-code",
+      label: 'source-code',
     },
   ],
   [
     {
-      href: "http://start.m1n.land",
+      href: 'http://start.m1n.land',
       icon: LayoutTemplate,
-      label: "startpage",
+      label: 'startpage',
     },
   ],
-];
+]

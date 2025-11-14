@@ -1,71 +1,59 @@
-import type { Metadata } from "next";
-import {
-  ClipboardList,
-  Store,
-  RefreshCcwDot,
-  TextCursorInput,
-} from "lucide-react";
-import { BentoCard, BentoGrid } from "app/components/ui/bento-grid";
-import { designSystem } from "app/lib/design-system";
+import type { Metadata } from 'next'
+import { ClipboardList, Store, RefreshCcwDot, TextCursorInput } from 'lucide-react'
+import { BentoCard, BentoGrid } from 'app/components/ui/bento-grid'
+import { designSystem } from 'app/lib/design-system'
 
 const features = [
   {
     Icon: Store,
-    name: "Miraviewer",
-    description:
-      "An all-in-one dashboard for efficiently managing sales, invoices, and reports.",
-    href: "https://links.m1n.land/miraviewer",
-    cta: "Visit Miraviewer",
-    background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />
-    ),
-    className: "lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2",
+    name: 'Miraviewer',
+    description: 'An all-in-one dashboard for efficiently managing sales, invoices, and reports.',
+    href: 'https://links.m1n.land/miraviewer',
+    cta: 'Visit Miraviewer',
+    background: <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />,
+    className: 'lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2',
   },
   {
     Icon: ClipboardList,
-    name: "Pastol",
-    description: "Paste.lol Unofficial Command Line Interface.",
-    href: "https://links.m1n.land/pastol-repo",
-    cta: "Visit repo",
-    background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />
-    ),
-    className: "lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2",
+    name: 'Pastol',
+    description: 'Paste.lol Unofficial Command Line Interface.',
+    href: 'https://links.m1n.land/pastol-repo',
+    cta: 'Visit repo',
+    background: <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />,
+    className: 'lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2',
   },
   {
     Icon: RefreshCcwDot,
-    name: "rusted-yadm",
-    description: "A command-line dotfile manager.",
-    href: "https://links.m1n.land/rusted-yadm",
-    cta: "Visit repo",
-    background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />
-    ),
-    className: "lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3",
+    name: 'rusted-yadm',
+    description: 'A command-line dotfile manager.',
+    href: 'https://links.m1n.land/rusted-yadm',
+    cta: 'Visit repo',
+    background: <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />,
+    className: 'lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3',
   },
   {
     Icon: TextCursorInput,
-    name: "RustedLessPass",
-    description:
-      "Access all your passwords anytime with one master password, no syncing needed.",
-    href: "https://links.m1n.land/rustlesspass",
-    cta: "Visit RustedLessPass",
-    background: (
-      <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />
-    ),
-    className: "lg:col-start-2 lg:col-end-4 lg:row-start-2 lg:row-end-3",
+    name: 'RustedLessPass',
+    description: 'Access all your passwords anytime with one master password, no syncing needed.',
+    href: 'https://links.m1n.land/rustlesspass',
+    cta: 'Visit RustedLessPass',
+    background: <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />,
+    className: 'lg:col-start-2 lg:col-end-4 lg:row-start-2 lg:row-end-3',
   },
-];
+]
 
 export const metadata: Metadata = {
-  title: "Projects",
-  description: "Check out my projects.",
-};
+  title: 'Projects',
+  description:
+    'Explore my open source projects including Miraviewer, Pastol, rusted-yadm, and RustedLessPass - built with Rust, Go, and modern web technologies.',
+}
 
 export default function Page() {
   return (
     <section>
-      <h1 className={`${designSystem.spacing.component.header} font-semibold text-2xl tracking-tighter`}>
+      <h1
+        className={`${designSystem.spacing.component.header} font-semibold text-2xl tracking-tighter`}
+      >
         My Projects
       </h1>
       <div>
@@ -76,5 +64,5 @@ export default function Page() {
         </BentoGrid>
       </div>
     </section>
-  );
+  )
 }

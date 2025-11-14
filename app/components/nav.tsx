@@ -1,27 +1,27 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { navItems } from "app/constants/navItems";
-import { designSystem } from "app/lib/design-system";
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { navItems } from 'app/constants/navItems'
+import { designSystem } from 'app/lib/design-system'
 
 const ScrollProgress = () => {
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0)
 
   useEffect(() => {
     const updateScrollProgress = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      setScrollProgress(scrollPercent);
-    };
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
+      setScrollProgress(scrollPercent)
+    }
 
-    window.addEventListener('scroll', updateScrollProgress);
-    updateScrollProgress(); // Initial call
+    window.addEventListener('scroll', updateScrollProgress)
+    updateScrollProgress() // Initial call
 
-    return () => window.removeEventListener('scroll', updateScrollProgress);
-  }, []);
+    return () => window.removeEventListener('scroll', updateScrollProgress)
+  }, [])
 
   return (
     <div className="fixed top-0 left-0 w-full h-0.5 bg-neutral-200 dark:bg-neutral-800 z-50">
@@ -31,11 +31,11 @@ const ScrollProgress = () => {
         aria-hidden="true"
       />
     </div>
-  );
-};
+  )
+}
 
 const Navbar = React.memo(() => {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <>
@@ -51,8 +51,8 @@ const Navbar = React.memo(() => {
             <div className="flex flex-row justify-between items-center w-full pr-10">
               <div className="flex flex-row space-x-0">
                 {navItems.map(({ path, name }) => {
-                  const isExternal = path.startsWith("http");
-                  const isActive = !isExternal && pathname === path;
+                  const isExternal = path.startsWith('http')
+                  const isActive = !isExternal && pathname === path
 
                   return (
                     <Link
@@ -61,7 +61,7 @@ const Navbar = React.memo(() => {
                       className={`${designSystem.interactions.navItem} px-2 m-1 flex align-middle relative py-1 focus:outline-none ${
                         isActive ? 'bg-accent text-accent-foreground' : ''
                       }`}
-                      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                       aria-label={isExternal ? `${name} (opens in new tab)` : name}
                       aria-current={isActive ? 'page' : undefined}
                     >
@@ -75,7 +75,7 @@ const Navbar = React.memo(() => {
                             viewBox="0 0 24 24"
                             fill="none"
                             className="absolute -top-2 -right-4 text-neutral-400 dark:text-neutral-500"
-                            style={{ fontSize: "1em" }}
+                            style={{ fontSize: '1em' }}
                             aria-hidden="true"
                           >
                             <path
@@ -96,7 +96,7 @@ const Navbar = React.memo(() => {
                         )}
                       </span>
                     </Link>
-                  );
+                  )
                 })}
               </div>
             </div>
@@ -104,7 +104,7 @@ const Navbar = React.memo(() => {
         </div>
       </aside>
     </>
-  );
-});
+  )
+})
 
-export default Navbar;
+export default Navbar

@@ -1,5 +1,16 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* Font display swap for better loading performance */
+@font-face {
+  font-family: 'Geist Sans';
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  font-display: swap;
+}
 
 ::selection {
   background-color: #47a3f3;

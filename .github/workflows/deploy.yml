@@ -1,4 +1,4 @@
-name: "basic static site deployment"
+name: 'basic static site deployment'
 
 on:
   push:
@@ -29,5 +29,5 @@ jobs:
         with:
           user: m1n
           key: ${{ secrets.PRIVATE_KEY }}
-          src: "./out/"
-          project: "land"
+          src: './out/'
+          project: 'land'

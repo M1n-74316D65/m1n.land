@@ -1,18 +1,23 @@
-import { Button } from 'app/components/ui/button';
-import { Input } from 'app/components/ui/input';
-import { Textarea } from "app/components/ui/textarea"
-import Script from 'next/script';
-import Link from 'next/link';
-import { designSystem } from "app/lib/design-system";
+import { Button } from 'app/components/ui/button'
+import { Input } from 'app/components/ui/input'
+import { Textarea } from 'app/components/ui/textarea'
+import Script from 'next/script'
+import Link from 'next/link'
+import { designSystem } from 'app/lib/design-system'
+import type { Metadata } from 'next'
 
-export const metadata = {
-  title: "Guestbook",
-};
+export const metadata: Metadata = {
+  title: 'Guestbook',
+  description:
+    'Leave a message in my guestbook - share your thoughts, feedback, or just say hello!',
+}
 
 export default function Page() {
   return (
     <section>
-      <h1 className={`${designSystem.spacing.component.header} font-semibold text-2xl tracking-tighter`}>
+      <h1
+        className={`${designSystem.spacing.component.header} font-semibold text-2xl tracking-tighter`}
+      >
         My Guestbook
       </h1>
 
@@ -58,7 +63,7 @@ export default function Page() {
                 className="w-full min-h-[100px] resize-vertical"
               />
             </div>
-            <Button type='submit' variant="outline" className="w-full sm:w-auto">
+            <Button type="submit" variant="outline" className="w-full sm:w-auto">
               Submit
             </Button>
             <div id="guestbooks___error-message"></div>
@@ -68,8 +73,8 @@ export default function Page() {
         <div id="guestbooks___guestbook-made-with" className="text-right">
           <small className="text-muted-foreground">
             Made with{' '}
-            <Link 
-              target="_blank" 
+            <Link
+              target="_blank"
               href="https://guestbooks.meadow.cafe"
               className={designSystem.colors.text.link}
             >
@@ -79,12 +84,15 @@ export default function Page() {
         </div>
 
         <div className="border-t pt-6">
-          <h3 id="guestbooks___guestbook-messages-header" className={`${designSystem.spacing.component.header} font-semibold text-lg tracking-tight`}>
+          <h3
+            id="guestbooks___guestbook-messages-header"
+            className={`${designSystem.spacing.component.header} font-semibold text-lg tracking-tight`}
+          >
             Messages
           </h3>
           <div id="guestbooks___guestbook-messages-container"></div>
         </div>
       </div>
     </section>
-  );
+  )
 }

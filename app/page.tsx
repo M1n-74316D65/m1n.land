@@ -6,33 +6,7 @@ import Footer from 'app/components/footer/footer'
 import LinkComponent from 'app/components/LinkComponent'
 import React from 'react'
 import { designSystem } from 'app/lib/design-system'
-
-const links = [
-  {
-    href: 'https://www.rust-lang.org',
-    text: 'Rust',
-  },
-  {
-    href: 'https://zed.dev/',
-    text: 'Zed',
-  },
-  {
-    href: 'https://zellij.dev',
-    text: 'Zellij',
-  },
-  {
-    href: 'https://neovim.io',
-    text: 'Neovim',
-  },
-  {
-    href: 'https://nextjs.org',
-    text: 'Next.js',
-  },
-  {
-    href: 'https://go.dev',
-    text: 'Go',
-  },
-]
+import { links } from 'app/constants/socials'
 
 const texts = ['David', 'M1n']
 
@@ -57,7 +31,7 @@ const Page: React.FC = () => {
         </TypingAnimation>
         <MorphingText
           texts={texts}
-          className="min-w-[80px]"
+          className="min-w-20"
           delay={morphingStartDelay * 1000} // Convert back to milliseconds
         />
       </div>

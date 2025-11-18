@@ -1,6 +1,6 @@
 import { FC, ReactNode, useMemo } from 'react'
 import './global.css'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import Navbar from 'app/components/nav'
@@ -40,6 +40,12 @@ const siteMetadata: Metadata = {
 }
 
 export const metadata = siteMetadata
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#ffffff',
+}
 
 // Utility function for class names
 const cx = (...classes: (string | boolean | undefined)[]): string =>

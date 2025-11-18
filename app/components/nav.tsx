@@ -26,7 +26,7 @@ const ScrollProgress = () => {
   return (
     <div className="fixed top-0 left-0 w-full h-0.5 bg-neutral-200 dark:bg-neutral-800 z-50">
       <div
-        className="h-full bg-gradient-to-r from-neutral-600 to-neutral-400 dark:from-neutral-400 dark:to-neutral-600 transition-all duration-150 ease-out"
+        className="h-full bg-linear-to-r from-neutral-600 to-neutral-400 dark:from-neutral-400 dark:to-neutral-600 transition-all duration-150 ease-out"
         style={{ width: `${scrollProgress}%` }}
         aria-hidden="true"
       />

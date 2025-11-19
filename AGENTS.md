@@ -1,32 +1,20 @@
 # AGENTS.md
 
-## Build/Lint/Test Commands
+## Commands
 
-- `npm run dev` — Start development server
-- `npm run build` — Build for production
-- `npm start` — Start production server
-- No lint/test scripts configured. To add tests, use Jest or Vitest and add `npm run test`. For single test: `npm run test -- <pattern>` (after setup).
+- **Dev/Build:** `npm run dev`, `npm run build`, `npm start`
+- **Lint/Format:** `npm run format` (Prettier), `npm run format:check`
+- **Test:** No test script currently. To run single test (if setup): `npm test -- <file>`
 
-## Code Style Guidelines
+## Code Style & Conventions
 
-- **Imports:**
-  1. React imports first
-  2. Third-party imports (alphabetical)
-  3. Local imports (relative paths)
-- **Components:** Use functional components with TypeScript interfaces. Use `React.memo()` for performance-critical components.
-- **Naming:** PascalCase for components, camelCase for functions/variables.
-- **Formatting:** 2-space indentation, single quotes, no semicolons, trailing commas, max line length ~100 chars.
-- **Types:** Prefer explicit types for props, state, and function returns. Use TypeScript non-strict mode.
-- **Error Handling:** Use try/catch for async code. Log errors with context. Avoid silent failures.
-- **Utilities:** Use `cn()` for className merging.
-
-## File Structure
-
-- `app/components/` — Reusable components
-- `app/components/ui/` — Base UI components
-- `app/lib/` — Utility functions
-- `app/constants/` — Static config
-
-## Git Commits
-
-- Use conventional commits with gitmoji: `✨ feat(navbar): add scroll progress indicator`
+- **Stack:** Next.js 15, TypeScript, TailwindCSS, Framer Motion
+- **Formatting:** 2 spaces, single quotes, no semicolons, trailing commas (es5), width 100
+- **Naming:** PascalCase for components (`app/components`), camelCase for functions
+- **Imports:** React first, then third-party, then local (absolute imports preferred)
+- **Types:** Strict mode. Explicit types for props/returns. Avoid `any`
+- **Components:** Functional components. Use `'use client'` only when interactivity is needed
+- **Styling:** TailwindCSS. Use `cn()` from `app/lib/utils.ts` for class merging
+- **Error Handling:** `try/catch` for async. No silent failures
+- **Commits:** Conventional Commits + Gitmoji (e.g., `✨ feat(scope): description`)
+- **Structure:** `app/` (routes), `app/components/ui` (shadcn-like), `app/lib` (utils)

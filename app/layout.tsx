@@ -1,4 +1,4 @@
-import { FC, ReactNode, useMemo } from 'react'
+import { FC, ReactNode } from 'react'
 import './global.css'
 import type { Metadata, Viewport } from 'next'
 import { GeistSans } from 'geist/font/sans'
@@ -44,7 +44,10 @@ export const metadata = siteMetadata
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#ffffff',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
 }
 
 // Utility function for class names
@@ -56,20 +59,28 @@ interface RootLayoutProps {
   children: ReactNode
 }
 
+const themeScript = `
+(() => {
+  try {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    document.documentElement.classList.toggle('dark', prefersDark)
+  } catch (error) {
+    console.error('Theme detection error', error)
+  }
+})()
+`
+
 const RootLayout: FC<RootLayoutProps> = ({ children }) => {
-  const htmlClassName = useMemo(
-    () =>
-      cx(
-        'text-black bg-white dark:text-white dark:bg-black',
-        GeistSans.variable,
-        GeistMono.variable
-      ),
-    []
+  const htmlClassName = cx(
+    'text-black bg-white dark:text-white dark:bg-black',
+    GeistSans.variable,
+    GeistMono.variable
   )
 
   return (
     <html lang="en" className={htmlClassName}>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

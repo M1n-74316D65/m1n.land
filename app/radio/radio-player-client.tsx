@@ -106,11 +106,13 @@ export default function RadioPlayerClient() {
 
         // Add timeout to prevent infinite loading
         const playPromise = audio.play()
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Timeout')), 10000)
-        )
+        let timeoutId: ReturnType<typeof setTimeout>
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(() => reject(new Error('Timeout')), 10000)
+        })
 
         await Promise.race([playPromise, timeoutPromise])
+        clearTimeout(timeoutId!)
         setIsPlaying(true)
       } catch (e) {
         const errorMessage =

@@ -7,12 +7,11 @@ import { cn } from 'app/lib/utils'
 const morphTime = 1.5 // reduced from 1.85
 const cooldownTime = 0.65 // reduced from 0.85
 
-const useMorphingText = (texts: string[]) => {
+const useMorphingText = (texts: string[], enabled: boolean) => {
   const textIndexRef = useRef(0)
   const morphRef = useRef(0)
   const cooldownRef = useRef(0)
   const timeRef = useRef(new Date())
-  const [isStarted, setIsStarted] = useState(false)
 
   const text1Ref = useRef<HTMLSpanElement>(null)
   const text2Ref = useRef<HTMLSpanElement>(null)
@@ -22,9 +21,13 @@ const useMorphingText = (texts: string[]) => {
       const [current1, current2] = [text1Ref.current, text2Ref.current]
       if (!current1 || !current2) return
 
-      if (!isStarted) {
-        current1.textContent = ''
+      if (texts.length < 2) {
+        current1.textContent = texts[0] ?? ''
         current2.textContent = ''
+        current1.style.filter = 'none'
+        current1.style.opacity = '100%'
+        current2.style.filter = 'none'
+        current2.style.opacity = '0%'
         return
       }
 
@@ -38,7 +41,7 @@ const useMorphingText = (texts: string[]) => {
       current1.textContent = texts[textIndexRef.current % texts.length]
       current2.textContent = texts[(textIndexRef.current + 1) % texts.length]
     },
-    [texts, isStarted]
+    [texts]
   )
 
   const doMorph = useCallback(() => {
@@ -71,14 +74,26 @@ const useMorphingText = (texts: string[]) => {
   }, [])
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsStarted(true)
-    }, 750) // Start after a short delay
+    if (!enabled) return
 
-    return () => clearTimeout(timer)
-  }, [])
+    const [current1, current2] = [text1Ref.current, text2Ref.current]
+    if (current1 && current2) {
+      textIndexRef.current = 0
+      morphRef.current = 0
+      cooldownRef.current = 0
+      timeRef.current = new Date()
+      current1.textContent = texts[0] ?? ''
+      current2.textContent = texts[1] ?? texts[0] ?? ''
+      current1.style.filter = 'none'
+      current1.style.opacity = '100%'
+      current2.style.filter = 'none'
+      current2.style.opacity = '0%'
+    }
+  }, [enabled, texts])
 
   useEffect(() => {
+    if (!enabled) return
+
     let animationFrameId: number
 
     const animate = () => {
@@ -98,7 +113,7 @@ const useMorphingText = (texts: string[]) => {
     return () => {
       cancelAnimationFrame(animationFrameId)
     }
-  }, [doMorph, doCooldown])
+  }, [doMorph, doCooldown, enabled])
 
   return { text1Ref, text2Ref }
 }
@@ -109,8 +124,11 @@ interface MorphingTextProps {
   delay?: number
 }
 
-const Texts: React.FC<Pick<MorphingTextProps, 'texts'>> = ({ texts }) => {
-  const { text1Ref, text2Ref } = useMorphingText(texts)
+const Texts: React.FC<Pick<MorphingTextProps, 'texts'> & { enabled: boolean }> = ({
+  texts,
+  enabled,
+}) => {
+  const { text1Ref, text2Ref } = useMorphingText(texts, enabled)
   return (
     <>
       <span
@@ -146,7 +164,7 @@ export const MorphingText: React.FC<MorphingTextProps> = ({ texts, className, de
         'transition-opacity duration-200'
       )}
     >
-      <Texts texts={texts} />
+      <Texts texts={texts} enabled={isVisible} />
       <svg id="filters" className="fixed h-0 w-0" preserveAspectRatio="xMidYMid slice">
         <defs>
           <filter id="threshold">

@@ -10,6 +10,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
+env:
+  NODE_ENV: production
+  NEXT_TELEMETRY_DISABLED: '1'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,6 +38,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
 
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Cache Next.js
         uses: actions/cache@v4
         with:
@@ -44,6 +59,26 @@ jobs:
 
       - name: Build static site
         run: bun run build
+
+      - name: Verify static output
+        run: test -d out
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-site
+          path: ./out
+
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: static-site
+          path: ./out
 
       - name: Upload to PGS
         uses: picosh/pgs-action@v3

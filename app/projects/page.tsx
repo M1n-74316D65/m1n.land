@@ -9,8 +9,10 @@ const features = [
     name: 'Miraviewer',
     description: 'An all-in-one dashboard for efficiently managing sales, invoices, and reports.',
     href: 'https://links.m1n.land/miraviewer',
-    cta: 'Visit Miraviewer',
-    background: <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />,
+    cta: 'View project',
+    background: (
+      <div className="absolute inset-0 bg-gradient-to-br from-card/70 to-muted/30 dark:from-neutral-900/60 dark:to-neutral-950/40" />
+    ),
     className: 'lg:col-start-1 lg:col-end-3 lg:row-start-1 lg:row-end-2',
   },
   {
@@ -18,8 +20,10 @@ const features = [
     name: 'Pastol',
     description: 'Paste.lol Unofficial Command Line Interface.',
     href: 'https://links.m1n.land/pastol-repo',
-    cta: 'Visit repo',
-    background: <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />,
+    cta: 'View repo',
+    background: (
+      <div className="absolute inset-0 bg-gradient-to-br from-card/70 to-muted/30 dark:from-neutral-900/60 dark:to-neutral-950/40" />
+    ),
     className: 'lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2',
   },
   {
@@ -27,8 +31,10 @@ const features = [
     name: 'rusted-yadm',
     description: 'A command-line dotfile manager.',
     href: 'https://links.m1n.land/rusted-yadm',
-    cta: 'Visit repo',
-    background: <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />,
+    cta: 'View repo',
+    background: (
+      <div className="absolute inset-0 bg-gradient-to-br from-card/70 to-muted/30 dark:from-neutral-900/60 dark:to-neutral-950/40" />
+    ),
     className: 'lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3',
   },
   {
@@ -36,8 +42,10 @@ const features = [
     name: 'RustedLessPass',
     description: 'Access all your passwords anytime with one master password, no syncing needed.',
     href: 'https://links.m1n.land/rustlesspass',
-    cta: 'Visit RustedLessPass',
-    background: <div className="absolute inset-0 bg-gradient-to-br from-card to-muted/50" />,
+    cta: 'View project',
+    background: (
+      <div className="absolute inset-0 bg-gradient-to-br from-card/70 to-muted/30 dark:from-neutral-900/60 dark:to-neutral-950/40" />
+    ),
     className: 'lg:col-start-2 lg:col-end-4 lg:row-start-2 lg:row-end-3',
   },
 ]
@@ -51,13 +59,16 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <section>
-      <h1
-        className={`${designSystem.spacing.component.header} font-semibold text-2xl tracking-tighter`}
-      >
-        My Projects
-      </h1>
+      <div className="mb-3">
+        <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+          My Projects
+        </h1>
+        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+          Selected work and experiments.
+        </p>
+      </div>
       <div>
-        <BentoGrid className="lg:grid-rows-3 lg:grid-cols-3 gap-4">
+        <BentoGrid className="lg:grid-rows-3 lg:grid-cols-3 gap-3">
           {features.map((feature) => (
             <BentoCard key={feature.name} {...feature} />
           ))}

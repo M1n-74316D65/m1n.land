@@ -46,6 +46,14 @@
   --bg-secondary: hsl(var(--card));
   --bg-accent: hsl(var(--accent));
   --border-primary: hsl(var(--border));
+
+  /* Space theme colors for Deep Space One */
+  --space-cyan: #22d3ee;
+  --space-cyan-glow: rgba(34, 211, 238, 0.5);
+  --space-purple: #a855f7;
+  --space-purple-glow: rgba(168, 85, 247, 0.3);
+  --space-black: #0a0a0f;
+  --space-gray: #1a1a2e;
 }
 
 .dark {

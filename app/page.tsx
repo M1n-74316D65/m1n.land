@@ -1,12 +1,10 @@
-import { TypingAnimation } from 'app/components/ui/magicui/typing-animation'
-import { MorphingText } from 'app/components/ui/magicui/morphing-text'
+import React from 'react'
 
 import BlurFade from 'app/components/ui/magicui/blur-fade'
 import Footer from 'app/components/footer/footer'
-import LinkComponent from 'app/components/LinkComponent'
-import React from 'react'
+import { MorphingText } from 'app/components/ui/magicui/morphing-text'
+import { TypingAnimation } from 'app/components/ui/magicui/typing-animation'
 import { designSystem } from 'app/lib/design-system'
-import { links } from 'app/constants/socials'
 
 const texts = ['David', 'M1n']
 

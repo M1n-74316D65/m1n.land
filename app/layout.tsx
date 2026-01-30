@@ -8,6 +8,7 @@ import Particles from 'app/components/ui/magicui/particles'
 import DarkModeDetector from 'app/components/ui/dark-mode-detector'
 import { baseUrl } from 'app/constants/baseUrl'
 import { designSystem } from 'app/lib/design-system'
+import { cn } from 'app/lib/utils'
 
 // Metadata configuration
 const siteMetadata: Metadata = {
@@ -50,10 +51,6 @@ export const viewport: Viewport = {
   ],
 }
 
-// Utility function for class names
-const cx = (...classes: (string | boolean | undefined)[]): string =>
-  classes.filter(Boolean).join(' ')
-
 // RootLayout component
 interface RootLayoutProps {
   children: ReactNode
@@ -71,8 +68,8 @@ const themeScript = `
 `
 
 const RootLayout: FC<RootLayoutProps> = ({ children }) => {
-  const htmlClassName = cx(
-    'text-black bg-white dark:text-white dark:bg-black',
+  const htmlClassName = cn(
+    'bg-white text-black dark:bg-black dark:text-white',
     GeistSans.variable,
     GeistMono.variable
   )

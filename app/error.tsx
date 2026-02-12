@@ -37,9 +37,7 @@ export default function Error({ error, reset }: ErrorProps) {
       </Button>
       {error?.message && (
         <details className="mt-6 text-left">
-          <summary className="cursor-pointer text-xs text-muted-foreground">
-            Error details
-          </summary>
+          <summary className="cursor-pointer text-xs text-muted-foreground">Error details</summary>
           <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-muted-foreground">
             {error.message}
           </pre>

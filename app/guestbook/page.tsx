@@ -16,7 +16,7 @@ export default function Page() {
   return (
     <section>
       <h1
-        className={`${designSystem.spacing.component.header} font-semibold text-2xl tracking-tighter`}
+        className={`${designSystem.spacing.component.header} ${designSystem.typography.pageTitle}`}
       >
         My Guestbook
       </h1>
@@ -27,7 +27,10 @@ export default function Page() {
           strategy="afterInteractive"
         />
 
-        <div id="guestbooks___guestbook-form-container">
+        <div
+          id="guestbooks___guestbook-form-container"
+          className="bg-card border border-border/60 rounded-xl p-6 shadow-sm"
+        >
           <form
             id="guestbooks___guestbook-form"
             action="https://guestbooks.meadow.cafe/guestbook/590/submit"
@@ -71,7 +74,7 @@ export default function Page() {
         </div>
 
         <div id="guestbooks___guestbook-made-with" className="text-right">
-          <small className="text-muted-foreground">
+          <small className={designSystem.typography.caption}>
             Made with{' '}
             <Link
               target="_blank"
@@ -83,10 +86,10 @@ export default function Page() {
           </small>
         </div>
 
-        <div className="border-t pt-6">
+        <div className="border-t border-border pt-6">
           <h3
             id="guestbooks___guestbook-messages-header"
-            className={`${designSystem.spacing.component.header} font-semibold text-lg tracking-tight`}
+            className={`${designSystem.spacing.component.header} ${designSystem.typography.sectionTitle}`}
           >
             Messages
           </h3>

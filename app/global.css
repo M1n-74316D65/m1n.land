@@ -15,8 +15,8 @@
 }
 
 ::selection {
-  background-color: #47a3f3;
-  color: #fefefe;
+  background-color: var(--ring);
+  color: var(--background);
 }
 
 :root {
@@ -32,7 +32,7 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.5 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -202,7 +202,7 @@ html {
 }
 
 .prose pre {
-  @apply bg-neutral-50 dark:bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-900 py-2 px-3 text-sm;
+  @apply bg-muted rounded-lg overflow-x-auto border border-border py-2 px-3 text-sm;
 }
 
 .prose code {

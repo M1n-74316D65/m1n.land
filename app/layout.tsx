@@ -91,6 +91,12 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
         />
       </head>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:border focus:border-border focus:rounded-md focus:shadow-md"
+        >
+          Skip to main content
+        </a>
         <Particles
           className="fixed inset-0 -z-10"
           quantity={Math.floor(Math.PI * 10)}
@@ -101,6 +107,7 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
           vy={Math.PI / 12}
         />
         <main
+          id="main-content"
           className={`flex-auto min-w-0 ${designSystem.spacing.component.section} flex flex-col px-2 md:px-0`}
         >
           <DarkModeDetector />

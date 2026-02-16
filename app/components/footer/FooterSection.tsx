@@ -11,7 +11,7 @@ interface FooterSectionProps {
 }
 
 const FooterSection: FC<FooterSectionProps> = ({ links }) => (
-  <ul className="font-sm flex flex-col space-x-0 space-y-2 text-neutral-600 md:flex-row md:space-x-4 md:space-y-0 dark:text-neutral-300">
+  <ul className="font-sm flex flex-col space-x-0 space-y-3 text-muted-foreground md:flex-row md:space-x-5 md:space-y-0">
     {links.map((link, index) => (
       <FooterLink key={index} {...link} />
     ))}

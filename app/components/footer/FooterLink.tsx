@@ -11,7 +11,7 @@ interface FooterLinkProps {
 const FooterLink: FC<FooterLinkProps> = ({ href, icon: Icon, label }) => (
   <li>
     <Link
-      className="flex items-center rounded-full px-2 py-1 text-sm text-neutral-500 transition-colors hover:bg-neutral-100/70 hover:text-neutral-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300 dark:text-neutral-400 dark:hover:bg-neutral-900/60 dark:hover:text-neutral-100 dark:focus-visible:ring-neutral-700"
+      className="flex items-center rounded-full px-2 py-1 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       rel="noopener noreferrer"
       target="_blank"
       href={href}

@@ -119,6 +119,7 @@ const Particles: React.FC<ParticlesProps> = ({
       ref={canvasRef}
       className={`absolute inset-0 pointer-events-none ${className}`}
       style={{ position: 'fixed' }}
+      aria-hidden="true"
     />
   )
 }

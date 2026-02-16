@@ -68,11 +68,7 @@ const themeScript = `
 `
 
 const RootLayout: FC<RootLayoutProps> = ({ children }) => {
-  const htmlClassName = cn(
-    'bg-white text-black dark:bg-black dark:text-white',
-    GeistSans.variable,
-    GeistMono.variable
-  )
+  const htmlClassName = cn('bg-background text-foreground', GeistSans.variable, GeistMono.variable)
 
   return (
     <html lang="en" className={htmlClassName}>

@@ -1,145 +1,150 @@
 # AGENTS.md
 
-## Purpose
+This file provides guidance to agents when working with code in this repository.
 
-- Provide quick reference for agentic coding help
-- Follow repository conventions before introducing new patterns
-- Keep edits minimal, targeted, and consistent with existing code
-- Prefer using established helpers and shared tokens
+## Project Overview
+
+Personal portfolio website built with Next.js 16, React 19, Tailwind CSS v4, and MDX. Uses the App Router architecture with TypeScript strict mode.
 
 ## Commands
 
-- Install dependencies: `bun install` (or `npm install`)
-- Dev server: `bun run dev`
-- Production build: `bun run build`
-- Start production server: `bun run start`
-- Format all files: `bun run format`
-- Check formatting: `bun run format:check`
-- Lint: no npm script yet, use `bunx eslint .` if needed
-- Tests: no test runner configured in `package.json`
-- Single test (once configured): `bun test <file>` or runner-specific
-- Avoid adding tests/tools unless explicitly requested
+- **Install**: `bun install` (preferred) or `npm install`
+- **Dev server**: `bun run dev`
+- **Build**: `bun run build`
+- **Production**: `bun run start`
+- **Format**: `bun run format` (Prettier is source of truth)
+- **Format check**: `bun run format:check`
+- **Lint**: No dedicated lint script - uses ESLint via Next.js build
+- **Tests**: No test runner configured - avoid adding tests unless requested
 
-## Editor Rules
+## Critical Architecture Notes
 
-- No `.cursor/rules/` or `.cursorrules` files detected
-- No `.github/copilot-instructions.md` file detected
-- If editor rules are added later, mirror them here
+- **Two CSS files with different purposes**:
+  - `app/global.css` - imported by layout, contains prose styles and syntax highlighting
+  - `app/globals.css` - theme tokens, semantic utilities, shadcn/ui variables (OKLCH color space)
+  - Don't confuse them!
+- **Dark mode**: Uses `media` query strategy (system preference), NOT class-based - configured in `tailwind.config.js`
+- **Analytics**: Custom Umami integration at `analytics.m1n.land`
+- **Path alias**: Use `app/` prefix for imports (e.g., `import { cn } from 'app/lib/utils'`)
 
-## Stack Overview
+## Code Style Guidelines
 
-- Framework: Next.js 16 (App Router)
-- Language: TypeScript (strict mode)
-- UI: React 19, Tailwind CSS v4, Radix UI, class-variance-authority
-- Animation: Framer Motion / Motion utilities
-- MDX: `next-mdx-remote` with `sugar-high` highlighting
+### Imports
 
-## Project Structure
+- Use `app/` path alias for internal imports: `import { cn } from 'app/lib/utils'`
+- Group imports: React/Next first, then external packages, then internal modules
+- Use named exports for utilities, default exports for page components
 
-- `app/` contains all routes and layouts
-- `app/layout.tsx` is the root layout
-- `app/page.tsx` is the home route
-- `app/og/route.tsx` handles OpenGraph images
-- `app/components/` holds shared UI and layout components
-- `app/components/ui/` holds shadcn-like primitives
-- `app/components/ui/magicui/` holds animated UI widgets
-- `app/constants/` stores data arrays and static config
-- `app/lib/` hosts utilities like `cn` and design tokens
-- `app/global.css` is imported by `app/layout.tsx`
-- `app/globals.css` defines theme tokens and semantic utilities
+### Formatting (Prettier)
 
-## Formatting
+```json
+{
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "endOfLine": "lf"
+}
+```
 
-- Prettier is the source of truth for formatting
-- 2-space indentation
-- Single quotes for strings
-- No semicolons
-- Trailing commas (es5)
-- Line width: 100 characters
-- End-of-line: LF
+### TypeScript
 
-## Imports
+- Strict mode enabled with `noImplicitAny` and `strictNullChecks`
+- Define interfaces for component props: `interface ComponentProps { ... }`
+- Use `React.FC` or inline types for components
+- Prefer `interface` over `type` for object shapes
+- Export types alongside components when needed
 
-- Order imports: React first, then Next, then third-party, then local
-- Use `import type` for type-only imports
-- Prefer absolute imports (e.g., `app/components/...`)
-- Separate import groups with a blank line
-- Avoid unused imports and keep lists tidy
+### Naming Conventions
 
-## TypeScript
+- **Components**: PascalCase files matching component name (`Button.tsx`, `nav.tsx`)
+- **Utilities**: camelCase (`utils.ts`, `design-system.ts`)
+- **Constants**: camelCase for objects (`navItems`, `footerLinks`)
+- **CSS classes**: Use Tailwind utilities, semantic tokens, or design system
 
-- Strict mode is enabled in `tsconfig.json`
-- Avoid `any`; use proper types or generics
-- Add explicit types for component props and exports
-- Prefer named `interface`/`type` aliases for props
-- Use `as const` for literal unions when appropriate
-- Keep types colocated with their components
+### Component Patterns
 
-## Components
+- Use `'use client'` directive for client components
+- Wrap interactive components with `React.memo()` for performance
+- Use `data-slot` attribute for component identification
+- Prefer function declarations over arrow functions for components
 
-- Favor function components over class components
-- Use `'use client'` only when state, effects, or browser APIs are needed
-- Routes/layouts generally use default exports
-- Shared utilities and UI pieces use named exports
-- Use `cn()` from `app/lib/utils.ts` for class merging
-- Use `cva` for variant-based UI components
-- Keep component logic near the render, avoid hidden side effects
+```tsx
+const Component: React.FC<Props> = ({ prop }) => {
+  return <div>{prop}</div>
+}
+```
 
-## Styling
+### Styling
 
-- Tailwind utilities are the primary styling mechanism
-- Use semantic tokens from `app/globals.css` when possible
-- Use `designSystem` tokens from `app/lib/design-system.ts`
-- Avoid inline styles unless Tailwind cannot express the rule
-- Keep global styles in `app/global.css` or `app/globals.css`
-- Prefer `className` over hard-coded style objects
+- Use `cn()` utility from `app/lib/utils.ts` for class merging
+- Use `designSystem` object from `app/lib/design-system.ts` for consistent spacing/colors
+- Semantic tokens: `bg-background`, `text-foreground`, `text-muted-foreground`
+- shadcn/ui configured with New York style and Lucide icons
 
-## Error Handling
+### Error Handling
 
-- Wrap async work in `try/catch` and log errors
-- Provide contextual `console.error` messages
-- Avoid silent failures or empty catches
-- Use `ErrorBoundary` when client components can throw
-- Prefer early returns for invalid input
+- Error boundary at `app/error.tsx` with reset functionality
+- Include error details in collapsible section for debugging
+- Provide user-friendly messages with retry action
 
-## Accessibility
+### Animation
 
-- Use semantic HTML elements for structure
-- Provide `aria-*` attributes for custom controls
-- Ensure interactive elements are keyboard accessible
-- Use `next/link` for internal navigation
-- Use `next/image` for images and optimize `alt` text
+- Use Framer Motion / Motion library for animations
+- Calculate timing values rather than hardcoding for cohesive sequences
+- Reference `app/page.tsx` for animation coordination patterns
 
-## Data & Constants
+## Custom Utilities
 
-- Store static data in `app/constants/`
-- Keep URLs and configuration centralized (see `baseUrl.ts`)
-- Prefer immutable exports (`const`) for constants
-- Avoid inline arrays/objects in components when reused
+| Utility        | Location                     | Purpose                                |
+| -------------- | ---------------------------- | -------------------------------------- |
+| `cn()`         | `app/lib/utils.ts:4`         | Class merging with tailwind-merge      |
+| `designSystem` | `app/lib/design-system.ts:1` | Consistent spacing/colors/interactions |
+| `CustomMDX`    | `app/components/mdx.tsx:105` | MDX rendering with custom components   |
 
-## Routing & Metadata
+## shadcn/ui Components
 
-- Use Next.js `Metadata` and `Viewport` types
-- Define metadata in route/layout files
-- Keep SEO and OpenGraph values centralized
-- Use `robots.ts` and `sitemap.ts` for crawler config
+Located in `app/components/ui/`:
 
-## MDX
+- `button.tsx` - Button with variants (default, outline, ghost, link)
+- `card.tsx` - Card container
+- `tooltip.tsx` - Tooltip component
+- `input.tsx`, `textarea.tsx` - Form inputs
+- `navigation-menu.tsx` - Navigation component
+- `magicui/` - Animation components (blur-fade, morphing-text, particles, etc.)
 
-- Use `app/components/mdx.tsx` for MDX rendering
-- Reuse the `components` map for consistent styling
-- Keep slug generation deterministic for headings
-- Use `sugar-high` for syntax highlighting
+## File Structure
 
-## Performance
+```
+app/
+├── components/
+│   ├── ui/           # shadcn/ui and magicui components
+│   ├── footer/       # Footer components
+│   └── *.tsx         # Shared components
+├── constants/        # Static data (navItems, socials, footerLinks)
+├── lib/              # Utilities (utils.ts, design-system.ts)
+├── globals.css       # Theme tokens (OKLCH)
+├── global.css        # Prose styles, syntax highlighting
+└── */                # Route segments
+```
 
-- Prefer server components by default
-- Minimize client-side state and effects
-- Avoid large client bundles in shared components
-- Use `next/image` and lazy-loading where appropriate
+## Common Tasks
 
-## Testing
+### Adding a new page
 
-- No automated tests are configured right now
-- If a test runner is added, document commands here
-- Prefer adding tests only when the user requests them
+1. Create directory in `app/` with `page.tsx`
+2. Add route to `app/constants/navItems.ts` if navigable
+3. Use `designSystem` for consistent spacing
+
+### Adding a new component
+
+1. Create in `app/components/` or `app/components/ui/`
+2. Use `cn()` for class merging
+3. Export from component file
+4. Use `'use client'` if interactive
+
+### Adding a new UI variant
+
+1. Update component variants using `cva()` from class-variance-authority
+2. Follow existing pattern in `button.tsx`

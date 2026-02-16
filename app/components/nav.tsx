@@ -27,10 +27,8 @@ const Navbar = React.memo(() => {
                   <Link
                     key={path}
                     href={path}
-                    className={`flex items-center rounded-full border border-transparent px-2.5 py-1 text-sm text-neutral-500 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300 hover:border-neutral-200 hover:text-neutral-900 dark:text-neutral-400 dark:focus-visible:ring-neutral-700 dark:hover:border-neutral-800 dark:hover:text-neutral-100 ${
-                      isActive
-                        ? 'bg-neutral-100/80 text-neutral-900 border-neutral-200 dark:bg-neutral-900/70 dark:text-neutral-100 dark:border-neutral-800'
-                        : ''
+                    className={`flex items-center rounded-full border border-transparent px-2.5 py-1 text-sm text-muted-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 hover:border-border hover:text-foreground ${
+                      isActive ? 'bg-accent/80 text-foreground border-border' : ''
                     }`}
                     {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     aria-label={isExternal ? `${name} (opens in new tab)` : name}
@@ -43,7 +41,7 @@ const Navbar = React.memo(() => {
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="none"
-                          className="ml-1 h-3 w-3 text-neutral-400 dark:text-neutral-500"
+                          className="ml-1 h-3 w-3 text-muted-foreground"
                           aria-hidden="true"
                         >
                           <path

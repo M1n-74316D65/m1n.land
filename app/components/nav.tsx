@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import React from 'react'
 import { usePathname } from 'next/navigation'
+import { motion } from 'motion/react'
 import { navItems } from 'app/constants/navItems'
 
 const Navbar = React.memo(() => {
@@ -18,7 +19,7 @@ const Navbar = React.memo(() => {
           aria-label="Main navigation"
         >
           <div className="flex flex-row justify-between items-center w-full pr-10">
-            <div className="flex flex-row flex-wrap items-center gap-1.5">
+            <div className="flex flex-row items-center gap-1 p-1 bg-muted/50 backdrop-blur-sm rounded-full border border-border/50">
               {navItems.map(({ path, name }) => {
                 const isExternal = path.startsWith('http')
                 const isActive = !isExternal && pathname === path
@@ -27,23 +28,30 @@ const Navbar = React.memo(() => {
                   <Link
                     key={path}
                     href={path}
-                    className={`group flex items-center rounded-full border border-transparent px-2.5 py-1 text-sm text-muted-foreground transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 hover:border-border hover:text-foreground active:scale-[0.98] ${
-                      isActive
-                        ? 'bg-accent/80 text-foreground border-border font-medium shadow-sm'
-                        : ''
-                    }`}
+                    className="group relative flex items-center px-4 py-2 text-sm text-muted-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full"
                     {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     aria-label={isExternal ? `${name} (opens in new tab)` : name}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    <span className="relative inline-flex items-center">
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeTab"
+                        className="absolute inset-0 bg-background rounded-full shadow-sm border border-border/50"
+                        transition={{
+                          type: 'spring',
+                          stiffness: 500,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10 inline-flex items-center font-medium">
                       {name}
                       {isExternal && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="none"
-                          className="ml-1 h-3 w-3 text-muted-foreground transition-colors group-hover:text-foreground"
+                          className="ml-1 h-3 w-3 text-muted-foreground/70 transition-colors group-hover:text-muted-foreground"
                           aria-hidden="true"
                         >
                           <path

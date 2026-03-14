@@ -2,30 +2,35 @@ import type { Metadata } from 'next'
 import { BentoCard, BentoGrid } from 'app/components/ui/bento-grid'
 import { designSystem } from 'app/lib/design-system'
 import BlurFade from 'app/components/ui/magicui/blur-fade'
+import { LayoutDashboard, Terminal, FolderCog, Lock } from 'lucide-react'
 
 const features = [
   {
     name: 'Miraviewer',
     description: 'All-in-one dashboard for managing sales, invoices, and reports.',
     href: 'https://links.m1n.land/miraviewer',
+    icon: LayoutDashboard,
     className: 'lg:col-span-2 lg:row-span-1',
   },
   {
     name: 'Pastol',
     description: 'Command-line interface for paste.lol.',
     href: 'https://links.m1n.land/pastol-repo',
+    icon: Terminal,
     className: 'lg:col-span-1 lg:row-span-1',
   },
   {
     name: 'rusted-yadm',
     description: 'A command-line dotfile manager written in Rust.',
     href: 'https://links.m1n.land/rusted-yadm',
+    icon: FolderCog,
     className: 'lg:col-span-1 lg:row-span-1',
   },
   {
     name: 'RustedLessPass',
     description: 'Stateless password manager - one master password, no sync needed.',
     href: 'https://links.m1n.land/rustlesspass',
+    icon: Lock,
     className: 'lg:col-span-2 lg:row-span-1',
   },
 ]

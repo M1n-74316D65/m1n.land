@@ -23,7 +23,7 @@ export default function RadioPage() {
         </BlurFade>
 
         <BlurFade delay={0.4}>
-          <div className="bg-card border border-border/60 rounded-2xl p-8 shadow-sm">
+          <div className="bg-card/50 backdrop-blur-sm border border-border/60 rounded-2xl p-8 shadow-sm">
             <ErrorBoundary>
               <RadioPlayerClient />
             </ErrorBoundary>
@@ -31,7 +31,9 @@ export default function RadioPage() {
         </BlurFade>
 
         <BlurFade delay={0.6}>
-          <p className={`text-center ${designSystem.typography.caption} mt-6`}>
+          <p
+            className={`text-center ${designSystem.typography.caption} mt-6 text-muted-foreground/80`}
+          >
             Powered by{' '}
             <a
               href="https://somafm.com"
@@ -40,8 +42,8 @@ export default function RadioPage() {
               className="underline underline-offset-2 hover:text-foreground transition-colors"
             >
               SomaFM
-            </a>{' '}
-            •{' '}
+            </a>
+            {' • '}
             <a
               href="https://somafm.com/support/"
               target="_blank"

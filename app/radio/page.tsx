@@ -11,19 +11,19 @@ export const metadata: Metadata = {
 
 export default function RadioPage() {
   return (
-    <section className="min-h-[60vh] flex flex-col items-center justify-center">
-      <div className="w-full max-w-md">
+    <section>
+      <div className="mx-auto w-full max-w-md">
         <BlurFade delay={0.2}>
-          <div className="text-center mb-8">
-            <h1 className={`${designSystem.typography.pageTitle} mb-2`}>Deep Space One</h1>
-            <p className={`${designSystem.typography.body} text-muted-foreground`}>
-              Deep ambient electronic, experimental and space music
+          <div className="mb-8">
+            <h1 className={designSystem.typography.pageTitle}>Radio</h1>
+            <p className={`mt-1 ${designSystem.typography.body} text-muted-foreground`}>
+              Deep Space One from SomaFM.
             </p>
           </div>
         </BlurFade>
 
-        <BlurFade delay={0.4}>
-          <div className="bg-card/50 backdrop-blur-sm border border-border/60 rounded-2xl p-8 shadow-sm">
+        <BlurFade delay={0.3}>
+          <div className="rounded-xl border border-border/60 bg-card p-6 shadow-sm">
             <ErrorBoundary>
               <RadioPlayerClient />
             </ErrorBoundary>

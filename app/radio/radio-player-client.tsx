@@ -1,10 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { Play, Pause, Volume2, Volume1, VolumeX, Radio } from 'lucide-react'
-import { Button } from 'app/components/ui/button'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { LoaderCircle, Pause, Play, Volume1, Volume2, VolumeX } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
+
 import Equalizer from 'app/components/equalizer'
+import { Button } from 'app/components/ui/button'
+import { Separator } from 'app/components/ui/separator'
+import { designSystem } from 'app/lib/design-system'
 
 export default function RadioPlayerClient() {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -26,6 +29,14 @@ export default function RadioPlayerClient() {
       setError(null)
     }
     const onCanPlay = () => setIsLoading(false)
+    const onPlaying = () => {
+      setIsPlaying(true)
+      setIsLoading(false)
+    }
+    const onPause = () => {
+      setIsPlaying(false)
+      setIsLoading(false)
+    }
     const onError = () => {
       setIsLoading(false)
       setIsPlaying(false)
@@ -35,12 +46,16 @@ export default function RadioPlayerClient() {
 
     audio.addEventListener('loadstart', onLoadStart)
     audio.addEventListener('canplay', onCanPlay)
+    audio.addEventListener('playing', onPlaying)
+    audio.addEventListener('pause', onPause)
     audio.addEventListener('error', onError)
     audio.addEventListener('abort', onAbort)
 
     return () => {
       audio.removeEventListener('loadstart', onLoadStart)
       audio.removeEventListener('canplay', onCanPlay)
+      audio.removeEventListener('playing', onPlaying)
+      audio.removeEventListener('pause', onPause)
       audio.removeEventListener('error', onError)
       audio.removeEventListener('abort', onAbort)
     }
@@ -61,18 +76,18 @@ export default function RadioPlayerClient() {
       audio.pause()
       setIsPlaying(false)
       setIsLoading(false)
-    } else {
-      try {
-        setIsLoading(true)
-        setError(null)
-        await audio.play()
-        setIsPlaying(true)
-      } catch (e) {
-        setError('Unable to play')
-        setIsPlaying(false)
-      } finally {
-        setIsLoading(false)
-      }
+      return
+    }
+
+    try {
+      setIsLoading(true)
+      setError(null)
+      await audio.play()
+      setIsPlaying(true)
+    } catch {
+      setError('Unable to play')
+      setIsPlaying(false)
+      setIsLoading(false)
     }
   }, [isPlaying])
 
@@ -80,14 +95,15 @@ export default function RadioPlayerClient() {
     if (isMuted) {
       setIsMuted(false)
       setVolume(previousVolume || 0.5)
-    } else {
-      setPreviousVolume(volume)
-      setIsMuted(true)
+      return
     }
-  }, [isMuted, volume, previousVolume])
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value)
+    setPreviousVolume(volume)
+    setIsMuted(true)
+  }, [isMuted, previousVolume, volume])
+
+  const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(event.target.value)
     setVolume(newVolume)
     if (newVolume > 0 && isMuted) {
       setIsMuted(false)
@@ -100,77 +116,104 @@ export default function RadioPlayerClient() {
   }, [togglePlay])
 
   const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume < 0.5 ? Volume1 : Volume2
+  const statusLabel = error ? 'Error' : isLoading ? 'Connecting' : isPlaying ? 'Live' : 'Idle'
+  const statusCopy = error
+    ? 'The stream could not be loaded.'
+    : isPlaying
+      ? 'Continuous live broadcast.'
+      : isLoading
+        ? 'Opening stream.'
+        : 'Ready when you are.'
+  const volumeValue = Math.round((isMuted ? 0 : volume) * 100)
+  const volumeLabel = isMuted || volumeValue === 0 ? 'Muted' : `${volumeValue}%`
 
-  const sliderColor = 'var(--primary)'
+  const sliderColor = 'var(--foreground)'
   const trackColor = 'var(--muted)'
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      {/* Main Player Controls */}
-      <div className="flex items-center gap-6">
+    <div className="flex flex-col gap-6">
+      <div>
+        <p className="text-base font-medium tracking-tight text-foreground">Deep Space One</p>
+        <p className={`${designSystem.typography.body} mt-1 text-muted-foreground`}>
+          Deep ambient electronic, experimental and space music.
+        </p>
+      </div>
+
+      <div className="flex items-center gap-4">
         <motion.div
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-          className="relative"
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: 'spring', stiffness: 420, damping: 24 }}
+          className="relative shrink-0"
         >
-          {/* Glow effect when playing */}
-          {isPlaying && (
-            <motion.div
-              className="absolute inset-0 rounded-full bg-primary/20 blur-xl"
-              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          )}
           <Button
             onClick={togglePlay}
             variant="outline"
             size="icon"
-            className="h-16 w-16 rounded-full relative bg-background"
+            className="h-14 w-14 rounded-full border-border/60 bg-background shadow-xs"
             disabled={isLoading}
+            aria-label={isPlaying ? 'Pause radio stream' : 'Play radio stream'}
+            aria-pressed={isPlaying}
           >
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <motion.div
                   key="loading"
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.15 }}
-                  className="animate-spin rounded-full h-5 w-5 border-2 border-muted-foreground/30 border-t-foreground"
-                />
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.16 }}
+                >
+                  <LoaderCircle className="h-5 w-5 animate-spin text-muted-foreground" />
+                </motion.div>
               ) : isPlaying ? (
                 <motion.div
                   key="pause"
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.15 }}
-                  className="flex items-center gap-2"
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.16 }}
                 >
-                  <Pause className="h-6 w-6" />
+                  <Pause className="h-5 w-5" />
                 </motion.div>
               ) : (
                 <motion.div
                   key="play"
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.15 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.16 }}
                 >
-                  <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+                  <Play className="ml-0.5 h-5 w-5" fill="currentColor" />
                 </motion.div>
               )}
             </AnimatePresence>
           </Button>
         </motion.div>
 
-        {/* Equalizer */}
-        <Equalizer isPlaying={isPlaying} />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-3">
+            <Equalizer isPlaying={isPlaying} className="h-5" />
+            <div className="min-w-0">
+              <p className="text-sm font-medium tracking-tight text-foreground">{statusLabel}</p>
+              <p className={`${designSystem.typography.caption} mt-1 text-muted-foreground`}>
+                {statusCopy}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Volume Controls */}
-      <div className="flex items-center gap-3 w-full max-w-[200px]">
-        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={toggleMute}>
+      <Separator className="bg-border/60" />
+
+      <div className="flex items-center gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
+          onClick={toggleMute}
+          aria-label={isMuted ? 'Unmute volume' : 'Mute volume'}
+          aria-pressed={isMuted}
+        >
           <VolumeIcon className="h-4 w-4" />
         </Button>
 
@@ -181,38 +224,42 @@ export default function RadioPlayerClient() {
           step="0.01"
           value={isMuted ? 0 : volume}
           onChange={handleVolumeChange}
-          className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer bg-muted
-            [&::-webkit-slider-thumb]:appearance-none
-            [&::-webkit-slider-thumb]:w-3
+          aria-label="Radio volume"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={volumeValue}
+          aria-valuetext={volumeLabel}
+          className="h-1.5 w-full cursor-pointer appearance-none rounded-full border border-border/30 bg-muted
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
             [&::-webkit-slider-thumb]:h-3
+            [&::-webkit-slider-thumb]:w-3
+            [&::-webkit-slider-thumb]:appearance-none
             [&::-webkit-slider-thumb]:rounded-full
-            [&::-webkit-slider-thumb]:bg-primary
-            [&::-webkit-slider-thumb]:transition-transform
-            [&::-webkit-slider-thumb]:hover:scale-125"
+            [&::-webkit-slider-thumb]:bg-foreground"
           style={{
             background: `linear-gradient(to right, ${sliderColor} 0%, ${sliderColor} ${(isMuted ? 0 : volume) * 100}%, ${trackColor} ${(isMuted ? 0 : volume) * 100}%, ${trackColor} 100%)`,
           }}
         />
 
-        <span className="text-xs text-muted-foreground w-8 text-right">
-          {Math.round((isMuted ? 0 : volume) * 100)}%
-        </span>
+        <span className="w-10 text-right text-xs text-muted-foreground">{volumeLabel}</span>
       </div>
 
-      {/* Error State */}
       <AnimatePresence>
         {error && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="flex flex-col items-center gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20"
+            exit={{ opacity: 0, y: -8 }}
+            className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between"
           >
-            <div className="flex items-center gap-2 text-destructive">
-              <Radio className="h-4 w-4" />
-              <span className="text-sm">{error}</span>
-            </div>
-            <Button variant="outline" size="sm" onClick={retry} className="text-xs">
+            <p className="text-destructive">{error}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={retry}
+              className="w-full sm:w-auto"
+              aria-label="Retry radio stream"
+            >
               Retry
             </Button>
           </motion.div>

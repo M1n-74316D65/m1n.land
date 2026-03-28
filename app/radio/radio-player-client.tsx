@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'motion/react'
 
 import Equalizer from 'app/components/equalizer'
 import { Button } from 'app/components/ui/button'
-import { Separator } from 'app/components/ui/separator'
 import { designSystem } from 'app/lib/design-system'
 
 export default function RadioPlayerClient() {
@@ -116,14 +115,6 @@ export default function RadioPlayerClient() {
   }, [togglePlay])
 
   const VolumeIcon = isMuted || volume === 0 ? VolumeX : volume < 0.5 ? Volume1 : Volume2
-  const statusLabel = error ? 'Error' : isLoading ? 'Connecting' : isPlaying ? 'Live' : 'Idle'
-  const statusCopy = error
-    ? 'The stream could not be loaded.'
-    : isPlaying
-      ? 'Continuous live broadcast.'
-      : isLoading
-        ? 'Opening stream.'
-        : 'Ready when you are.'
   const volumeValue = Math.round((isMuted ? 0 : volume) * 100)
   const volumeLabel = isMuted || volumeValue === 0 ? 'Muted' : `${volumeValue}%`
 
@@ -131,140 +122,211 @@ export default function RadioPlayerClient() {
   const trackColor = 'var(--muted)'
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <p className="text-base font-medium tracking-tight text-foreground">Deep Space One</p>
-        <p className={`${designSystem.typography.body} mt-1 text-muted-foreground`}>
-          Deep ambient electronic, experimental and space music.
-        </p>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <motion.div
-          whileTap={{ scale: 0.97 }}
-          transition={{ type: 'spring', stiffness: 420, damping: 24 }}
-          className="relative shrink-0"
-        >
-          <Button
-            onClick={togglePlay}
-            variant="outline"
-            size="icon"
-            className="h-14 w-14 rounded-full border-border/60 bg-background shadow-xs"
-            disabled={isLoading}
-            aria-label={isPlaying ? 'Pause radio stream' : 'Play radio stream'}
-            aria-pressed={isPlaying}
+    <div className="flex flex-col gap-5">
+      {/* Player Card */}
+      <div
+        className={`
+          relative overflow-hidden rounded-2xl border border-border/50 bg-card/50
+          backdrop-blur-sm p-6 sm:p-8
+          ${designSystem.interactions.card}
+        `}
+      >
+        {/* Status Badge - Top Right */}
+        <div className="absolute top-4 right-4">
+          <motion.div
+            initial={false}
+            animate={{ opacity: 1 }}
+            className={`
+              flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium
+              ${
+                isPlaying
+                  ? 'bg-primary/10 text-primary border border-primary/20'
+                  : 'bg-muted text-muted-foreground border border-border/50'
+              }
+            `}
           >
-            <AnimatePresence mode="wait">
-              {isLoading ? (
-                <motion.div
-                  key="loading"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.16 }}
-                >
-                  <LoaderCircle className="h-5 w-5 animate-spin text-muted-foreground" />
-                </motion.div>
-              ) : isPlaying ? (
-                <motion.div
-                  key="pause"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.16 }}
-                >
-                  <Pause className="h-5 w-5" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="play"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.16 }}
-                >
-                  <Play className="ml-0.5 h-5 w-5" fill="currentColor" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Button>
-        </motion.div>
+            {isPlaying && <Equalizer isPlaying={isPlaying} className="h-3 w-3" />}
+            <span>{isPlaying ? 'LIVE' : isLoading ? 'Loading' : 'Idle'}</span>
+          </motion.div>
+        </div>
 
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-3">
-            <Equalizer isPlaying={isPlaying} className="h-5" />
-            <div className="min-w-0">
-              <p className="text-sm font-medium tracking-tight text-foreground">{statusLabel}</p>
-              <p className={`${designSystem.typography.caption} mt-1 text-muted-foreground`}>
-                {statusCopy}
-              </p>
-            </div>
+        {/* Content */}
+        <div className="flex flex-col sm:flex-row sm:items-start gap-6">
+          {/* Play Button - Left side */}
+          <motion.div
+            whileTap={{ scale: 0.94 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+            className="shrink-0"
+          >
+            <Button
+              onClick={togglePlay}
+              variant="outline"
+              size="icon"
+              className={`
+                h-20 w-20 rounded-2xl border-2 shadow-sm
+                transition-all duration-200
+                ${
+                  isPlaying
+                    ? 'bg-primary/10 border-primary/40 text-primary hover:bg-primary/15 hover:border-primary/50'
+                    : 'bg-background border-border/60 hover:bg-accent hover:border-border'
+                }
+              `}
+              disabled={isLoading}
+              aria-label={isPlaying ? 'Pause radio stream' : 'Play radio stream'}
+              aria-pressed={isPlaying}
+            >
+              <AnimatePresence mode="wait">
+                {isLoading ? (
+                  <motion.div
+                    key="loading"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <LoaderCircle className="h-6 w-6 animate-spin text-muted-foreground" />
+                  </motion.div>
+                ) : isPlaying ? (
+                  <motion.div
+                    key="pause"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Pause className="h-6 w-6" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="play"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Play className="ml-1 h-6 w-6 fill-current" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Button>
+          </motion.div>
+
+          {/* Station Info - Right side */}
+          <div className="flex-1 min-w-0 pt-1">
+            <h2 className="text-xl font-semibold tracking-tight text-foreground mb-2">
+              Deep Space One
+            </h2>
+
+            <p
+              className={`${designSystem.typography.body} text-muted-foreground leading-relaxed max-w-md`}
+            >
+              Deep ambient electronic, experimental and space music. For expanding minds and
+              drifting through the cosmos.
+            </p>
+
+            {/* Status Messages */}
+            <AnimatePresence mode="wait">
+              {error ? (
+                <motion.div
+                  key="error"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="mt-4 flex items-center gap-3"
+                >
+                  <p className="text-sm text-destructive">Unable to connect to stream</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={retry}
+                    className="text-xs h-7"
+                    aria-label="Retry radio stream"
+                  >
+                    Retry
+                  </Button>
+                </motion.div>
+              ) : isLoading ? (
+                <motion.p
+                  key="loading"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="mt-4 text-sm text-muted-foreground flex items-center gap-2"
+                >
+                  <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
+                  Opening stream...
+                </motion.p>
+              ) : null}
+            </AnimatePresence>
           </div>
         </div>
+
+        {/* Live indicator pulse when playing */}
+        <AnimatePresence>
+          {isPlaying && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute bottom-4 left-6 flex items-center gap-2"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              <span className="text-xs text-muted-foreground">Continuous live broadcast</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <Separator className="bg-border/60" />
-
-      <div className="flex items-center gap-3">
+      {/* Volume Control Row */}
+      <div className="flex items-center gap-4 px-2">
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
+          className="h-10 w-10 shrink-0 text-muted-foreground hover:text-foreground transition-colors rounded-full"
           onClick={toggleMute}
           aria-label={isMuted ? 'Unmute volume' : 'Mute volume'}
           aria-pressed={isMuted}
         >
-          <VolumeIcon className="h-4 w-4" />
+          <VolumeIcon className="h-5 w-5" />
         </Button>
 
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={isMuted ? 0 : volume}
-          onChange={handleVolumeChange}
-          aria-label="Radio volume"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={volumeValue}
-          aria-valuetext={volumeLabel}
-          className="h-1.5 w-full cursor-pointer appearance-none rounded-full border border-border/30 bg-muted
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
-            [&::-webkit-slider-thumb]:h-3
-            [&::-webkit-slider-thumb]:w-3
-            [&::-webkit-slider-thumb]:appearance-none
-            [&::-webkit-slider-thumb]:rounded-full
-            [&::-webkit-slider-thumb]:bg-foreground"
-          style={{
-            background: `linear-gradient(to right, ${sliderColor} 0%, ${sliderColor} ${(isMuted ? 0 : volume) * 100}%, ${trackColor} ${(isMuted ? 0 : volume) * 100}%, ${trackColor} 100%)`,
-          }}
-        />
-
-        <span className="w-10 text-right text-xs text-muted-foreground">{volumeLabel}</span>
+        <div className="flex-1 flex items-center gap-4">
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={isMuted ? 0 : volume}
+            onChange={handleVolumeChange}
+            aria-label="Radio volume"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={volumeValue}
+            aria-valuetext={volumeLabel}
+            className="flex-1 h-2 cursor-pointer appearance-none rounded-full border border-border/30 bg-muted
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+              [&::-webkit-slider-thumb]:h-4
+              [&::-webkit-slider-thumb]:w-4
+              [&::-webkit-slider-thumb]:appearance-none
+              [&::-webkit-slider-thumb]:rounded-full
+              [&::-webkit-slider-thumb]:bg-foreground
+              [&::-webkit-slider-thumb]:border-2
+              [&::-webkit-slider-thumb]:border-background
+              [&::-webkit-slider-thumb]:shadow-sm
+              [&::-webkit-slider-thumb]:transition-transform
+              [&::-webkit-slider-thumb]:hover:scale-110"
+            style={{
+              background: `linear-gradient(to right, ${sliderColor} 0%, ${sliderColor} ${(isMuted ? 0 : volume) * 100}%, ${trackColor} ${(isMuted ? 0 : volume) * 100}%, ${trackColor} 100%)`,
+            }}
+          />
+          <span className="w-14 text-right text-sm font-medium text-muted-foreground tabular-nums">
+            {volumeLabel}
+          </span>
+        </div>
       </div>
-
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between"
-          >
-            <p className="text-destructive">{error}</p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={retry}
-              className="w-full sm:w-auto"
-              aria-label="Retry radio stream"
-            >
-              Retry
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <audio ref={audioRef} src={radioUrl} preload="none" />
     </div>

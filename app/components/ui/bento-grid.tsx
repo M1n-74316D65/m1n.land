@@ -1,15 +1,15 @@
-import { ComponentPropsWithoutRef, ReactNode } from 'react'
+import { ComponentPropsWithoutRef, FC, ReactNode } from 'react'
 import Link from 'next/link'
 import { LucideIcon, ArrowUpRight } from 'lucide-react'
 
 import { cn } from 'app/lib/utils'
 
-interface BentoGridProps extends ComponentPropsWithoutRef<'div'> {
+export interface BentoGridProps extends ComponentPropsWithoutRef<'div'> {
   children: ReactNode
   className?: string
 }
 
-interface BentoCardProps {
+export interface BentoCardProps {
   name: string
   className?: string
   description: string
@@ -17,7 +17,7 @@ interface BentoCardProps {
   icon: LucideIcon
 }
 
-const BentoGrid = ({ children, className, ...props }: BentoGridProps) => {
+const BentoGrid: FC<BentoGridProps> = ({ children, className, ...props }) => {
   return (
     <div
       className={cn(
@@ -31,7 +31,7 @@ const BentoGrid = ({ children, className, ...props }: BentoGridProps) => {
   )
 }
 
-const BentoCard = ({ name, className = '', description, href, icon: Icon }: BentoCardProps) => (
+const BentoCard: FC<BentoCardProps> = ({ name, className = '', description, href, icon: Icon }) => (
   <Link
     href={href}
     target="_blank"

@@ -37,12 +37,17 @@ const ConnectionStatus: React.FC<ConnectionStatusProps> = ({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0 }}
           className={`flex flex-col items-center justify-center gap-2 ${className ?? ''}`}
+          role="alert"
+          aria-live="assertive"
         >
-          <WifiOff className="h-5 w-5 text-destructive" />
-          <span className="text-sm text-destructive">Unable to connect</span>
+          <WifiOff className="h-5 w-5 text-destructive" aria-hidden="true" />
+          <span className="text-sm text-destructive" id="error-message">
+            Unable to connect
+          </span>
           <button
             onClick={onRetry}
             className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors cursor-pointer"
+            aria-describedby="error-message"
           >
             Retry
           </button>

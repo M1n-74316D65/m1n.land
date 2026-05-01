@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import { usePathname } from 'next/navigation'
 import { motion } from 'motion/react'
-import { navItems } from 'app/constants/navItems'
+import { navItems } from 'app/constants/links'
 
 const Navbar = React.memo(() => {
   const pathname = usePathname()
@@ -22,7 +22,7 @@ const Navbar = React.memo(() => {
             <div className="flex flex-row items-center gap-1 p-1 bg-muted/50 backdrop-blur-sm rounded-full border border-border/50">
               {navItems.map(({ path, name }) => {
                 const isExternal = path.startsWith('http')
-                const isActive = !isExternal && pathname === path
+                const isActive = !isExternal && pathname !== null && pathname === path
 
                 return (
                   <Link

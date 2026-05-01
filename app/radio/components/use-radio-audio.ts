@@ -3,17 +3,32 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const STREAM_URL = 'https://ice6.somafm.com/deepspaceone-128-mp3'
+const STORAGE_KEY = 'radio-volume'
+const DEFAULT_VOLUME = 0.5
 
 export function useRadioAudio() {
+  // Initialize volume from localStorage
+  const [volume, setVolumeState] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved !== null) {
+        const parsed = parseFloat(saved)
+        if (!isNaN(parsed) && parsed >= 0 && parsed <= 1) {
+          return parsed
+        }
+      }
+    }
+    return DEFAULT_VOLUME
+  })
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [volume, setVolumeState] = useState(0.5)
   const [isMuted, setIsMuted] = useState(false)
 
   const audioRef = useRef<HTMLAudioElement>(null)
   const isPlayingRef = useRef(isPlaying)
-  const previousVolumeRef = useRef(0.5)
+  const previousVolumeRef = useRef(DEFAULT_VOLUME)
 
   // Keep the ref in sync with state
   isPlayingRef.current = isPlaying
@@ -68,6 +83,13 @@ export function useRadioAudio() {
     const audio = audioRef.current
     if (audio) {
       audio.volume = isMuted ? 0 : volume
+    }
+  }, [volume, isMuted])
+
+  // Save volume to localStorage when it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !isMuted) {
+      localStorage.setItem(STORAGE_KEY, volume.toString())
     }
   }, [volume, isMuted])
 

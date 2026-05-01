@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import FooterSection from './FooterSection'
-import { footerLinks } from 'app/constants/footerLinks'
+import { footerLinks } from 'app/constants/links'
 import { designSystem } from 'app/lib/design-system'
 
 const Footer: FC = () => {

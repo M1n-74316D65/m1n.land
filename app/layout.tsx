@@ -1,10 +1,10 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, Suspense } from 'react'
 import './global.css'
 import type { Metadata, Viewport } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import Navbar from 'app/components/nav'
-import Particles from 'app/components/ui/magicui/particles'
+import LazyParticles from 'app/components/lazy-particles'
 import DarkModeDetector from 'app/components/ui/dark-mode-detector'
 import { baseUrl } from 'app/constants/baseUrl'
 import { designSystem } from 'app/lib/design-system'
@@ -18,6 +18,12 @@ const siteMetadata: Metadata = {
     template: '%s | M1n',
   },
   description: 'M1n portfolio - Developer, Linux enthusiast, and creator of open source projects.',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/apple-touch-icon.svg',
+  },
+  manifest: '/manifest.json',
   openGraph: {
     title: 'M1n',
     description:
@@ -37,6 +43,12 @@ const siteMetadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'M1n',
+    description:
+      'M1n portfolio - Developer, Linux enthusiast, and creator of open source projects.',
   },
 }
 
@@ -97,15 +109,9 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
         >
           Skip to main content
         </a>
-        <Particles
-          className="fixed inset-0 -z-10"
-          quantity={Math.floor(Math.PI * 10)}
-          staticity={40}
-          ease={60}
-          color="#888888"
-          vx={Math.PI / 12}
-          vy={Math.PI / 12}
-        />
+        <Suspense fallback={null}>
+          <LazyParticles />
+        </Suspense>
         <main
           id="main-content"
           className={`flex-auto min-w-0 ${designSystem.spacing.component.section} flex flex-col px-2 md:px-0`}

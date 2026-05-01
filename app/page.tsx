@@ -7,10 +7,9 @@ import { TypingAnimation } from 'app/components/ui/magicui/typing-animation'
 import { Badge } from 'app/components/ui/badge'
 import { Separator } from 'app/components/ui/separator'
 import { designSystem } from 'app/lib/design-system'
+import { techStack } from 'app/constants/links'
 
 const texts = ['David', 'M1n']
-
-const techStack = ['Rust', 'Go', 'TypeScript', 'Linux', 'Neovim']
 
 const Page: React.FC = () => {
   const typingDuration = 50

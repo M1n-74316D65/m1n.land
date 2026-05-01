@@ -1,7 +1,9 @@
-import RadioPlayerClient from './radio-player-client'
+import dynamic from 'next/dynamic'
 import ErrorBoundary from 'app/components/ui/error-boundary'
 import BlurFade from 'app/components/ui/magicui/blur-fade'
 import type { Metadata } from 'next'
+
+const RadioPlayerClient = dynamic(() => import('./radio-player-client'))
 
 export const metadata: Metadata = {
   title: 'Radio',

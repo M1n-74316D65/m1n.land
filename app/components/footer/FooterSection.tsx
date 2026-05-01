@@ -3,7 +3,7 @@ import FooterLink from './FooterLink'
 import { LucideIcon } from 'lucide-react'
 
 interface FooterSectionProps {
-  links: {
+  links: readonly {
     href: string
     icon: LucideIcon
     label: string

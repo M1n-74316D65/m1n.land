@@ -68,4 +68,6 @@ export const designSystem = {
       card: 'shadow-sm hover:shadow-md',
     },
   },
-}
+} as const
+
+export type DesignSystem = typeof designSystem

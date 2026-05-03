@@ -5,16 +5,18 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from 'app/lib/utils'
 
 const badgeVariants = cva(
-  'inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden',
+  'inline-flex items-center justify-center rounded-none border-2 border-border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-accent focus-visible:ring-accent/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow,transform] duration-100 overflow-hidden',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90',
+        default:
+          'border-2 border-border bg-foreground text-background shadow-brutal [a&]:hover:shadow-brutal-accent [a&]:hover:-translate-y-0.5',
         secondary:
-          'border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90',
+          'border-2 border-border bg-muted text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
         destructive:
-          'border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-        outline: 'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
+          'border-2 border-destructive bg-destructive text-white shadow-brutal [a&]:hover:shadow-brutal-accent',
+        outline:
+          'border-2 border-border bg-muted text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground [a&]:hover:border-accent',
       },
     },
     defaultVariants: {

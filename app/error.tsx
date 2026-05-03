@@ -28,8 +28,8 @@ export default function Error({ error, reset }: ErrorProps) {
           />
         </svg>
       </div>
-      <h2 className="mb-2 text-lg font-semibold tracking-tight">Something went wrong</h2>
-      <p className="mb-6 max-w-sm text-sm text-muted-foreground">
+      <h2 className="mb-2 text-lg font-bold tracking-tight">Something went wrong</h2>
+      <p className="mb-6 max-w-sm text-sm font-mono text-muted-foreground">
         An error occurred while loading this page. You can try again.
       </p>
       <Button variant="outline" onClick={reset}>
@@ -37,8 +37,10 @@ export default function Error({ error, reset }: ErrorProps) {
       </Button>
       {error?.message && (
         <details className="mt-6 text-left">
-          <summary className="cursor-pointer text-xs text-muted-foreground">Error details</summary>
-          <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs text-muted-foreground">
+          <summary className="cursor-pointer text-xs font-mono text-muted-foreground">
+            Error details
+          </summary>
+          <pre className="mt-2 overflow-auto bg-muted border-2 border-border p-3 text-xs font-mono text-muted-foreground">
             {error.message}
           </pre>
         </details>

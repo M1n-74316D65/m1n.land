@@ -29,58 +29,48 @@ const PlayButton: React.FC<PlayButtonProps> = ({
       aria-label={ariaLabel}
       aria-pressed={isPlaying}
       className={cn(
-        'relative flex h-24 w-24 items-center justify-center rounded-full outline-none transition-colors',
+        'relative flex h-24 w-24 items-center justify-center outline-none transition-colors duration-100',
         isPlaying
-          ? 'bg-primary/10 backdrop-blur-xl border-2 border-primary/40'
-          : 'bg-background border-2 border-border/60 shadow-lg shadow-black/10',
-        disabled && 'opacity-50 cursor-not-allowed',
-        className
+          ? 'bg-accent/10 border-2 border-accent shadow-brutal-accent'
+          : 'bg-card border-2 border-border shadow-brutal',
+        disabled && 'opacity-50 cursor-not-allowed'
       )}
-      whileHover={disabled ? undefined : { scale: 1.05 }}
-      whileTap={disabled ? undefined : { scale: 0.96 }}
+      whileHover={disabled ? undefined : { y: -2 }}
+      whileTap={disabled ? undefined : { y: 0 }}
       transition={{
         type: 'spring',
-        stiffness: 400,
-        damping: 17,
+        stiffness: 500,
+        damping: 30,
       }}
-      animate={
-        isPlaying
-          ? {
-              boxShadow: '0 0 60px rgba(99, 102, 241, 0.3)',
-            }
-          : {
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-            }
-      }
     >
       <AnimatePresence mode="wait">
         {isLoading ? (
           <motion.span
             key="loading"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
           >
             <LoaderCircle className="h-8 w-8 animate-spin text-muted-foreground" />
           </motion.span>
         ) : isPlaying ? (
           <motion.span
             key="pause"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
           >
-            <Pause className="h-8 w-8" />
+            <Pause className="h-8 w-8 text-accent" />
           </motion.span>
         ) : (
           <motion.span
             key="play"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.15 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
           >
             <Play className="ml-1 h-8 w-8 fill-current" />
           </motion.span>

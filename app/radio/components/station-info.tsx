@@ -9,8 +9,10 @@ interface StationInfoProps {
 
 const StationInfo: React.FC<StationInfoProps> = ({ isPlaying, className }) => {
   return (
-    <div className={`flex flex-col items-center gap-2 ${className ?? ''}`}>
-      <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+    <div
+      className={`flex flex-col items-center gap-2 bg-muted border-2 border-border shadow-brutal p-6 ${className ?? ''}`}
+    >
+      <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
         Deep Space One
       </h2>
 
@@ -18,28 +20,30 @@ const StationInfo: React.FC<StationInfoProps> = ({ isPlaying, className }) => {
         {isPlaying ? (
           <motion.div
             key="live"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             className="flex items-center gap-1.5"
             role="status"
             aria-live="polite"
           >
             <span className="relative flex h-2 w-2" aria-hidden="true">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              <span className="absolute inline-flex h-full w-full animate-ping bg-accent opacity-75" />
+              <span className="relative inline-flex h-2 w-2 bg-accent" />
             </span>
-            <span className="text-xs font-medium uppercase tracking-wider text-emerald-500">
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-accent">
               LIVE
             </span>
           </motion.div>
         ) : (
           <motion.span
             key="idle"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            className="text-sm text-muted-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="text-sm font-mono text-muted-foreground"
           >
             SomaFM
           </motion.span>

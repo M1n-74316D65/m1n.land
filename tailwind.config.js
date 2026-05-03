@@ -48,9 +48,17 @@ module.exports = {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: '0px',
+        md: '0px',
+        sm: '0px',
+      },
+      boxShadow: {
+        brutal: '3px 3px 0px 0px oklch(0.1 0 0)',
+        'brutal-accent': '3px 3px 0px 0px oklch(0.72 0.19 155)',
+        'brutal-lg': '5px 5px 0px 0px oklch(0.1 0 0)',
+        'dark:brutal': '3px 3px 0px 0px oklch(0.95 0 0)',
+        'dark:brutal-accent': '3px 3px 0px 0px oklch(0.72 0.19 155)',
+        'dark:brutal-lg': '5px 5px 0px 0px oklch(0.95 0 0)',
       },
       keyframes: {
         'accordion-down': {

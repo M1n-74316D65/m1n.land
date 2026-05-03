@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'motion/react'
 import { useCallback, useEffect, useRef } from 'react'
 
 import { useRadioAudio } from './components/use-radio-audio'
@@ -74,19 +73,6 @@ export default function RadioPlayerClient() {
       role="application"
       aria-label="Radio player"
     >
-      {/* Atmospheric glow when playing */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 -z-10"
-        animate={{
-          opacity: isPlaying ? 1 : 0,
-        }}
-        transition={{ duration: 1.2, ease: 'easeInOut' }}
-        style={{
-          background:
-            'radial-gradient(ellipse at 50% 40%, rgba(99, 102, 241, 0.12) 0%, transparent 60%)',
-        }}
-      />
-
       {/* Station identity */}
       <StationInfo isPlaying={isPlaying} />
 

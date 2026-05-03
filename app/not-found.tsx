@@ -3,11 +3,11 @@ import Link from 'next/link'
 
 const NotFound: React.FC = () => (
   <section className="flex flex-col items-center justify-center min-h-[70vh] text-center">
-    <h1 className="text-4xl font-semibold tracking-tight mb-4">404 - Page Not Found</h1>
-    <p className="text-muted-foreground mb-6">The page you are looking for does not exist.</p>
+    <h1 className="text-4xl font-bold tracking-tight mb-4">404</h1>
+    <p className="font-mono text-sm text-muted-foreground mb-6">Page not found.</p>
     <Link
       href="/"
-      className="px-4 py-2 bg-accent rounded-md text-sm font-medium transition-colors hover:bg-accent/80"
+      className="px-4 py-2 bg-accent text-accent-foreground border-2 border-accent text-sm font-mono font-bold shadow-brutal-accent hover:-translate-y-0.5 hover:shadow-brutal-lg transition-all duration-100 active:translate-y-0 active:shadow-none"
     >
       Return Home
     </Link>

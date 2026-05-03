@@ -29,7 +29,7 @@ export default function Page() {
 
         <div
           id="guestbooks___guestbook-form-container"
-          className="bg-card border border-border/60 rounded-xl p-6 shadow-sm"
+          className="bg-card border-2 border-border p-6 shadow-brutal"
         >
           <form
             id="guestbooks___guestbook-form"
@@ -86,7 +86,7 @@ export default function Page() {
           </small>
         </div>
 
-        <div className="border-t border-border pt-6">
+        <div className="border-t-2 border-border pt-6">
           <h3
             id="guestbooks___guestbook-messages-header"
             className={`${designSystem.spacing.component.header} ${designSystem.typography.sectionTitle}`}

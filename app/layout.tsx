@@ -1,10 +1,9 @@
-import { FC, ReactNode, Suspense } from 'react'
+import { FC, ReactNode } from 'react'
 import './global.css'
 import type { Metadata, Viewport } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import Navbar from 'app/components/nav'
-import LazyParticles from 'app/components/lazy-particles'
 import DarkModeDetector from 'app/components/ui/dark-mode-detector'
 import { baseUrl } from 'app/constants/baseUrl'
 import { designSystem } from 'app/lib/design-system'
@@ -59,7 +58,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1a1a' },
   ],
 }
 
@@ -105,13 +104,10 @@ const RootLayout: FC<RootLayoutProps> = ({ children }) => {
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:border focus:border-border focus:rounded-md focus:shadow-md"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-foreground focus:border-2 focus:border-border focus:shadow-brutal focus:font-mono focus:text-sm"
         >
           Skip to main content
         </a>
-        <Suspense fallback={null}>
-          <LazyParticles />
-        </Suspense>
         <main
           id="main-content"
           className={`flex-auto min-w-0 ${designSystem.spacing.component.section} flex flex-col px-2 md:px-0`}

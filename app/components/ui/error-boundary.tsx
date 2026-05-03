@@ -46,14 +46,14 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium mb-2">Radio Player Error</h3>
-            <p className="text-muted-foreground text-sm">
+            <h3 className="text-lg font-bold mb-2">Radio Player Error</h3>
+            <p className="font-mono text-muted-foreground text-sm">
               Something went wrong with the radio player. Please try refreshing the page.
             </p>
             {this.state.error && (
-              <details className="mt-4 text-xs text-muted-foreground">
+              <details className="mt-4 text-xs font-mono text-muted-foreground">
                 <summary>Error details</summary>
-                <pre className="mt-2 p-2 bg-muted rounded text-left overflow-auto">
+                <pre className="mt-2 p-3 bg-muted border-2 border-border text-left overflow-auto">
                   {this.state.error.message}
                 </pre>
               </details>

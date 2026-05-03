@@ -28,19 +28,15 @@ const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
-          filter:
-            state === 'playing'
-              ? 'drop-shadow(0 0 8px var(--primary))'
-              : 'drop-shadow(0 0 0px var(--primary))',
         }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.2 }}
         className={`flex items-end justify-center gap-1.5 h-32 sm:h-40 ${className ?? ''}`}
       >
         {Array.from({ length: BAR_COUNT }).map((_, index) => (
           <motion.div
             key={index}
-            className="w-1.5 rounded-full bg-primary origin-bottom"
+            className={`w-1.5 bg-foreground origin-bottom ${isPlaying ? 'bg-accent' : 'bg-foreground'}`}
             style={{ height: '100%' }}
             animate={
               state === 'playing'

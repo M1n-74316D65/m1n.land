@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { BentoCard, BentoGrid } from 'app/components/ui/bento-grid'
 import { designSystem } from 'app/lib/design-system'
-import BlurFade from 'app/components/ui/magicui/blur-fade'
 import { LayoutDashboard, Terminal, FolderCog, Lock } from 'lucide-react'
 
 const features = [
@@ -44,21 +43,17 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <section>
-      <BlurFade delay={0.1}>
-        <div className="mb-8">
-          <h1 className={designSystem.typography.pageTitle}>Projects</h1>
-          <p className={`mt-1 ${designSystem.typography.body} text-muted-foreground`}>
-            Selected work and experiments.
-          </p>
-        </div>
-      </BlurFade>
-      <BlurFade delay={0.2}>
-        <BentoGrid className="lg:grid-rows-2 lg:grid-cols-3 gap-4">
-          {features.map((feature) => (
-            <BentoCard key={feature.name} {...feature} />
-          ))}
-        </BentoGrid>
-      </BlurFade>
+      <div className="mb-8">
+        <h1 className={designSystem.typography.pageTitle}>Projects</h1>
+        <p className={`mt-1 font-mono text-sm text-muted-foreground`}>
+          Selected work and experiments.
+        </p>
+      </div>
+      <BentoGrid className="lg:grid-rows-2 lg:grid-cols-3 gap-4">
+        {features.map((feature) => (
+          <BentoCard key={feature.name} {...feature} />
+        ))}
+      </BentoGrid>
     </section>
   )
 }

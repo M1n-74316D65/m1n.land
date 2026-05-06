@@ -1,34 +1,48 @@
-image: alpine/edge
+image: alpine/latest
 packages:
-  - nodejs
-  - npm
   - curl
+  - rsync
 secrets:
-  - f9b0470f-3ea4-4b49-aeb9-99e9f48d75e5
-  - 9842a2f8-3365-4326-a3c0-9f155df7ae10
+  - f9b0470f-3ea4-4b49-aeb9-99e9f48d75e5  # SSH key for GitHub mirror
+  - 2d681c1b-dc07-4222-9d9a-599ec1f3dadc  # Pico SSH key for PGS deploy
+environment:
+  NODE_ENV: production
+  NEXT_TELEMETRY_DISABLED: '1'
 
 tasks:
   - configure-ssh: |
-      mkdir -p ~/.ssh
-      # echo "$f9b0470f-3ea4-4b49-aeb9-99e9f48d75e5" > ~/.ssh/id_ed25519
-      # chmod 600 ~/.ssh/id_ed25519
       ssh-keyscan github.com >> ~/.ssh/known_hosts
+      ssh-keyscan pgs.sh >> ~/.ssh/known_hosts
 
   - mirror-to-github: |
       cd m1n.land
       git remote add github git@github.com:M1n-74316D65/m1n.land.git || true
       git push --mirror github
 
-  - deploy: |
+  - build: |
       cd m1n.land
-      export VERCEL_TOKEN=$(cat ~/.VERCEL_TOKEN)
       curl -fsSL https://bun.sh/install | bash
       export BUN_INSTALL="$HOME/.bun"
       export PATH="$BUN_INSTALL/bin:$PATH"
-      bun install
+      bun install --frozen-lockfile
       bun run build
-      # Install Vercel CLI
-      bun install -g vercel
+      test -d out
 
-      # Deploy to Vercel using the provided token
-      vercel --prod --yes --token $VERCEL_TOKEN
+  - deploy: |
+      cd m1n.land
+      rsync --delete -rv out/ pgs.sh:/land
+
+artifacts:
+  - m1n.land/out
+
+triggers:
+  - action: email
+    condition: failure
+    to: ~m1n/land@lists.sr.ht
+
+submitter:
+  git.sr.ht:
+    enabled: true
+    allow-refs:
+      - refs/heads/master
+      - "refs/tags/*"

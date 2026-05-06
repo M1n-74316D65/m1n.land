@@ -35,9 +35,6 @@ tasks:
       ssh pgs.sh link land --to "$PROJECT" --write
       ssh pgs.sh retain land -n 3 --write
 
-artifacts:
-  - m1n.land/out
-
 triggers:
   - action: email
     condition: failure

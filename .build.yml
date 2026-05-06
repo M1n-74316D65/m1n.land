@@ -30,10 +30,7 @@ tasks:
 
   - deploy: |
       cd m1n.land
-      PROJECT="land-$(git rev-parse --short HEAD)"
-      rsync -rv out/ "pgs.sh:/$PROJECT"
-      ssh pgs.sh link land --to "$PROJECT" --write
-      ssh pgs.sh retain land -n 3 --write
+      rsync -rv out/ pgs.sh:/land
 
 artifacts:
   - m1n.land/out
